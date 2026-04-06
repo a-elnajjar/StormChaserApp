@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct StormHistoryView: View {
-    @State private var stormVM: StormViewModel?
     @Environment(\.modelContext) private var modelContext
+    @State private var stormVM: StormViewModel?
 
     var body: some View {
         NavigationStack {
@@ -46,20 +46,17 @@ struct StormHistoryView: View {
             .navigationTitle("Storm History")
             .navigationBarTitleDisplayMode(.inline)
             .task {
-                if stormVM == nil {
-                    let repository = StormRepository(modelContext: modelContext)
-                    stormVM = StormViewModel(repository: repository)
-                }
-                await stormVM?.fetchStorms()
+                let vm = StormViewModel(repository: StormRepository(modelContext: modelContext))
+                stormVM = vm
+                await vm.fetchStorms()
             }
-            .alert("Error", isPresented: .constant(stormVM?.errorMessage != nil)) {
-                Button("OK") {
-                    stormVM?.errorMessage = nil
-                }
+            .alert("Error", isPresented: Binding(
+                get: { stormVM?.errorMessage != nil },
+                set: { if !$0 { stormVM?.errorMessage = nil } }
+            )) {
+                Button("OK") { stormVM?.errorMessage = nil }
             } message: {
-                if let error = stormVM?.errorMessage {
-                    Text(error)
-                }
+                Text(stormVM?.errorMessage ?? "")
             }
         }
     }

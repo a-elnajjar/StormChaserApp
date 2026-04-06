@@ -64,7 +64,7 @@ struct CameraView: View {
 
                     if cameraVM.selectedImage != nil {
                         Button(action: {
-                            Task { await cameraVM.prepareMetadataForm(userLocation: appState.userLocation) }
+                            Task { await cameraVM.prepareMetadataForm(userLocation: appState.userLocation, debugCity: appState.debugCity) }
                         }) {
                             HStack {
                                 if cameraVM.isPreparingMetadata {

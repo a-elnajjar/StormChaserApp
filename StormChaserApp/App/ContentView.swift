@@ -11,9 +11,16 @@ struct ContentView: View {
     @State private var weatherVM = WeatherViewModel(
         repository: WeatherRepository(networkClient: NetworkClient())
     )
-    private let latitude = AppConfig.Locations.newYorkCityLatitude
-    private let longitude = AppConfig.Locations.newYorkCityLongitude
+    @State private var showSettings = false
     @Environment(AppState.self) private var appState
+
+    private var latitude: Double {
+        appState.debugCity?.latitude ?? AppConfig.Locations.newYorkCityLatitude
+    }
+
+    private var longitude: Double {
+        appState.debugCity?.longitude ?? AppConfig.Locations.newYorkCityLongitude
+    }
 
     var body: some View {
         TabView {
@@ -33,9 +40,22 @@ struct ContentView: View {
                 }
                 .navigationTitle("Weather")
                 .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            showSettings = true
+                        } label: {
+                            Image(systemName: "gearshape")
+                        }
+                    }
+                }
                 .refreshable {
                     await fetchWeatherData()
                 }
+            }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
+                    .environment(appState)
             }
             .tabItem {
                 Label("Weather", systemImage: "cloud.sun")
@@ -55,6 +75,9 @@ struct ContentView: View {
         }
         .task {
             await fetchWeatherData()
+        }
+        .onChange(of: appState.debugCity?.id) {
+            Task { await fetchWeatherData() }
         }
     }
 

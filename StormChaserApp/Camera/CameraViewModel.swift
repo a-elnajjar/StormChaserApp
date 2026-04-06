@@ -32,11 +32,13 @@ final class CameraViewModel {
         self.weatherRepository = weatherRepository
     }
 
-    func prepareMetadataForm(userLocation: CLLocationCoordinate2D?) async {
+    func prepareMetadataForm(userLocation: CLLocationCoordinate2D?, debugCity: AppConfig.DebugCity?) async {
         isPreparingMetadata = true
         defer { isPreparingMetadata = false }
 
-		if userLocation != nil {
+        if let city = debugCity {
+            currentLocation = (city.latitude, city.longitude)
+        } else if userLocation != nil {
             // weather.gov only covers the US, so NYC is used as the fixed location
             currentLocation = (AppConfig.Locations.newYorkCityLatitude, AppConfig.Locations.newYorkCityLongitude)
         }
@@ -56,12 +58,13 @@ final class CameraViewModel {
             humidity: weatherData?.humidity,
             windSpeed: weatherData?.windSpeed,
             weatherDescription: weatherData?.description,
-            latitude: AppConfig.Locations.newYorkCityLatitude,
-            longitude: AppConfig.Locations.newYorkCityLongitude,
+            latitude: currentLocation?.lat ?? AppConfig.Locations.newYorkCityLatitude,
+            longitude: currentLocation?.lon ?? AppConfig.Locations.newYorkCityLongitude,
             timestamp: Date(),
             notes: notes,
             stormType: stormType,
-            intensity: intensity
+            intensity: intensity,
+            duration: Int(duration)
         )
 
         Task {

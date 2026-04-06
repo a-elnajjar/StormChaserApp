@@ -11,22 +11,26 @@ import SwiftUI
 @main
 struct StormChaserApp: App {
     @State private var appState = AppState()
-    var sharedModelContainer: ModelContainer = {
+    private let modelContainerResult: Result<ModelContainer, Error> = {
         let schema = Schema([Storm.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return .success(try ModelContainer(for: schema, configurations: [modelConfiguration]))
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            return .failure(error)
         }
     }()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(appState)
+            switch modelContainerResult {
+            case .success(let container):
+                ContentView()
+                    .environment(appState)
+                    .modelContainer(container)
+            case .failure(let error):
+                ErrorView(message: "Failed to load storage: \(error.localizedDescription)")
+            }
         }
-        .modelContainer(sharedModelContainer)
     }
 }

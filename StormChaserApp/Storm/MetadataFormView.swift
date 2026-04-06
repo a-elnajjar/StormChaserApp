@@ -26,8 +26,7 @@ struct MetadataFormView: View {
     let stormTypes = AppConfig.StormTypes.all
 
     var body: some View {
-        NavigationStack {
-            Form {
+        Form {
                 Section("Storm Type") {
                     Picker("Type", selection: $stormType) {
                         ForEach(stormTypes, id: \.self) { type in
@@ -133,7 +132,6 @@ struct MetadataFormView: View {
             }
             .navigationTitle("Storm Details")
             .navigationBarTitleDisplayMode(.inline)
-        }
     }
 }
 
