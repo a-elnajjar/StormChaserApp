@@ -9,6 +9,8 @@ import SwiftUI
 
 struct WeatherView: View {
     let weather: Weather
+    let latitude: Double
+    let longitude: Double
 
     var body: some View {
         VStack(spacing: 24) {
@@ -71,6 +73,8 @@ struct WeatherView: View {
                 }
             }
 
+            RadarMapCard(latitude: latitude, longitude: longitude)
+
             Spacer()
         }
         .padding()
@@ -84,5 +88,5 @@ struct WeatherView: View {
                               ForecastPeriod(name: "Monday", temperature: 74, windSpeed: "12 mph", description: "Sunny"),
                               ForecastPeriod(name: "Monday Night", temperature: 60, windSpeed: "5 mph", description: "Cloudy"),
                           ])
-    WeatherView(weather: weather)
+    WeatherView(weather: weather, latitude: 40.7128, longitude: -74.0060)
 }

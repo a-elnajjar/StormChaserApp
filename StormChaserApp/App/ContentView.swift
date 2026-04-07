@@ -5,6 +5,7 @@
 //  Created by Abdalla Elnajjar on 2026-04-01.
 //
 
+import CoreLocation
 import SwiftUI
 
 struct ContentView: View {
@@ -12,6 +13,7 @@ struct ContentView: View {
         repository: WeatherRepository(networkClient: NetworkClient())
     )
     @State private var showSettings = false
+    @State private var locationTitle = "Weather"
     @Environment(AppState.self) private var appState
 
     private var latitude: Double {
@@ -32,13 +34,13 @@ struct ContentView: View {
                         WeatherSkeletonView()
 
                     case let .success(weather):
-                        WeatherView(weather: weather)
+                        WeatherView(weather: weather, latitude: latitude, longitude: longitude)
 
                     case let .error(message):
                         ErrorView(message: message)
                     }
                 }
-                .navigationTitle("Weather")
+                .navigationTitle(locationTitle)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
@@ -74,15 +76,31 @@ struct ContentView: View {
                 }
         }
         .task {
+            await resolveLocationTitle()
             await fetchWeatherData()
         }
         .onChange(of: appState.debugCity?.id) {
-            Task { await fetchWeatherData() }
+            Task {
+                await resolveLocationTitle()
+                await fetchWeatherData()
+            }
         }
     }
 
     private func fetchWeatherData() async {
         await weatherVM.fetchWeather(latitude: latitude, longitude: longitude)
+    }
+
+    private func resolveLocationTitle() async {
+        if let city = appState.debugCity {
+            locationTitle = city.name
+            return
+        }
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+        let placemarks = try? await CLGeocoder().reverseGeocodeLocation(location)
+        if let place = placemarks?.first {
+            locationTitle = place.locality ?? place.administrativeArea ?? "Weather"
+        }
     }
 }
 
