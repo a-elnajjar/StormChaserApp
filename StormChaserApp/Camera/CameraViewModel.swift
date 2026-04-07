@@ -61,7 +61,8 @@ final class CameraViewModel {
             timestamp: Date(),
             notes: notes,
             stormType: stormType,
-            intensity: intensity
+            intensity: intensity,
+            duration: Int(duration)
         )
 
         Task {
