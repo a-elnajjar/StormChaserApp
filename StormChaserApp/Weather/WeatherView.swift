@@ -56,14 +56,14 @@ struct WeatherView: View {
                             Text(period.name)
                                 .font(.subheadline)
                                 .frame(width: 120, alignment: .leading)
-                            Text(period.description)
+							Text(period.description ?? "")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                                 .lineLimit(1)
                             Spacer()
-                            Text(period.temperature.formattedTemperature())
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
+							Text("\(period.temperature ?? 0, specifier: "%.1f")°C")
+								.font(.subheadline)
+								.fontWeight(.semibold)
                         }
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
@@ -82,11 +82,11 @@ struct WeatherView: View {
 }
 
 #Preview {
-    let weather = Weather(temperature: 72.5, windSpeed: "10 mph", windDirection: "NE", humidity: 65, description: "Partly Cloudy",
-                          forecast: [
-                              ForecastPeriod(name: "Tonight", temperature: 65, windSpeed: "8 mph", description: "Clear"),
-                              ForecastPeriod(name: "Monday", temperature: 74, windSpeed: "12 mph", description: "Sunny"),
-                              ForecastPeriod(name: "Monday Night", temperature: 60, windSpeed: "5 mph", description: "Cloudy"),
-                          ])
-    WeatherView(weather: weather, latitude: 40.7128, longitude: -74.0060)
+//    let weather = Weather(temperature: 72.5, windSpeed: "10 mph", windDirection: "NE", humidity: 65, description: "Partly Cloudy",
+//                          forecast: [
+//                              ForecastPeriod(name: "Tonight", temperature: 65, windSpeed: "8 mph", description: "Clear"),
+//                              ForecastPeriod(name: "Monday", temperature: 74, windSpeed: "12 mph", description: "Sunny"),
+//                              ForecastPeriod(name: "Monday Night", temperature: 60, windSpeed: "5 mph", description: "Cloudy"),
+//                          ])
+//    WeatherView(weather: weather, latitude: 40.7128, longitude: -74.0060)
 }

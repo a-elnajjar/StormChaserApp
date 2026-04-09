@@ -50,9 +50,10 @@ actor NetworkClient {
             else {
                 throw NetworkError.invalidResponse
             }
-
-            let decoded = try JSONDecoder().decode(T.self, from: data)
-            return decoded
+			let decoder = JSONDecoder()
+			decoder.dateDecodingStrategy = .iso8601
+			let decoded = try decoder.decode(T.self, from: data)
+			return decoded
         } catch is DecodingError {
             throw NetworkError.decodingError
         } catch {

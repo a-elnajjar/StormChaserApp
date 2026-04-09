@@ -7,51 +7,53 @@
 
 import Foundation
 
-// MARK: - Weather Models
 
-struct PointData: Codable, Sendable {
-    let properties: PointProperties
+
+
+// MARK: - API Response Model (maps directly from .NET API)
+
+struct WeatherObservation: Codable, Sendable {
+	let source: String
+	let location: String
+	let temperature: Double?
+	let windSpeed: String?
+	let windDirection: String?
+	let humidity: Double?
+	let description: String?
+	let observedAt: Date
+	let forecasts: [ForecastPeriod]
 }
 
-struct PointProperties: Codable, Sendable {
-    let forecast: String
+struct ForecastPeriod: Codable, Sendable {
+	let name: String
+	let temperature: Double?
+	let windSpeed: String?
+	let windDirection: String?
+	let description: String?
 }
 
-struct ForecastData: Codable, Sendable {
-    let properties: ForecastProperties
-}
-
-struct ForecastProperties: Codable, Sendable {
-    let periods: [Period]
-}
-
-struct Period: Codable, Sendable {
-    let name: String
-    let temperature: Double?
-    let windSpeed: String?
-    let windDirection: String?
-    let relativeHumidity: QuantitativeValue?
-    let shortForecast: String
-}
-
-struct QuantitativeValue: Codable, Sendable {
-    let value: Double?
-}
-
-// MARK: Domain Model
+// MARK: - Domain Model
 
 struct Weather: Sendable {
-    let temperature: Double
-    let windSpeed: String
-    let windDirection: String
-    let humidity: Double
-    let description: String
-    let forecast: [ForecastPeriod]
-}
+	let source: String
+	let location: String
+	let temperature: Double
+	let windSpeed: String
+	let windDirection: String
+	let humidity: Double
+	let description: String
+	let observedAt: Date
+	let forecast: [ForecastPeriod]
 
-struct ForecastPeriod: Sendable {
-    let name: String
-    let temperature: Double
-    let windSpeed: String
-    let description: String
+	init(from obs: WeatherObservation) {
+		self.source       = obs.source
+		self.location     = obs.location
+		self.temperature  = obs.temperature ?? 0
+		self.windSpeed    = obs.windSpeed ?? "N/A"
+		self.windDirection = obs.windDirection ?? "N/A"
+		self.humidity     = obs.humidity ?? 0
+		self.description  = obs.description ?? "No description"
+		self.observedAt   = obs.observedAt
+		self.forecast     = obs.forecasts
+	}
 }
