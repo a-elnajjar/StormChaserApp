@@ -22,10 +22,9 @@ final class Storm {
     var notes: String = ""
     var stormType: String
     var intensity: Int?
-    var duration: Int?
 
     init(photoData: Data? = nil, temperature: Double? = nil, humidity: Double? = nil,
-         windSpeed: String? = nil, weatherDescription: String? = nil, latitude: Double, longitude: Double, timestamp: Date = Date(), notes: String = "", stormType: String, intensity: Int? = nil, duration: Int? = nil)
+         windSpeed: String? = nil, weatherDescription: String? = nil, latitude: Double, longitude: Double, timestamp: Date = Date(), notes: String = "", stormType: String, intensity: Int? = nil)
     {
         self.photoData = photoData
         self.temperature = temperature
@@ -38,6 +37,5 @@ final class Storm {
         self.notes = notes
         self.stormType = stormType
         self.intensity = intensity
-        self.duration = duration
     }
 }
