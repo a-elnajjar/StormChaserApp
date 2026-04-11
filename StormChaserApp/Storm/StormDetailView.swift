@@ -51,9 +51,6 @@ struct StormDetailView: View {
                         if let intensity = storm.intensity {
                             DetailRow(label: "Intensity", value: "Level \(intensity)")
                         }
-                        if let duration = storm.duration {
-                            DetailRow(label: "Duration", value: "\(duration) min")
-                        }
                         if !storm.notes.isEmpty {
                             DetailRow(label: "Notes", value: storm.notes)
                         }
