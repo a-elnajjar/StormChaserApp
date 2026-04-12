@@ -11,8 +11,9 @@ struct SettingsView: View {
     @Environment(AppState.self) private var appState
     @Environment(\.dismiss) private var dismiss
 
-    @State private var debugEnabled: Bool = false
-
+    @AppStorage("debugEnabled") private var debugEnabled: Bool = false
+    @AppStorage("selectedDebugCityName") private var selectedDebugCityName: String = ""
+    
     var body: some View {
         @Bindable var appState = appState
 
@@ -31,12 +32,14 @@ struct SettingsView: View {
                         ForEach(AppConfig.DebugCities.all) { city in
                             Button {
                                 appState.debugCity = city
+                                selectedDebugCityName = city.name
+                                
                             } label: {
                                 HStack {
                                     Text(city.name)
                                         .foregroundStyle(.primary)
                                     Spacer()
-                                    if appState.debugCity?.id == city.id {
+                                    if selectedDebugCityName == city.name {
                                         Image(systemName: "checkmark")
                                             .foregroundStyle(.blue)
                                     }
@@ -58,10 +61,24 @@ struct SettingsView: View {
                 }
             }
             .onAppear {
-                debugEnabled = appState.debugCity != nil
+                if debugEnabled {
+                    appState.debugCity = AppConfig.DebugCities.all.first(where: { $0.name == selectedDebugCityName })
+                        ?? AppConfig.DebugCities.all.first
+                    selectedDebugCityName = appState.debugCity?.name ?? ""
+                } else {
+                    appState.debugCity = nil
+                }
             }
             .onChange(of: debugEnabled) { _, enabled in
-                appState.debugCity = enabled ? AppConfig.DebugCities.all.first : nil
+                if enabled {
+                    let city = AppConfig.DebugCities.all.first(where: { $0.name == selectedDebugCityName })
+                        ?? AppConfig.DebugCities.all.first
+                    appState.debugCity = city
+                    selectedDebugCityName = city?.name ?? ""
+                } else {
+                    appState.debugCity = nil
+                    selectedDebugCityName = ""
+                }
             }
         }
     }

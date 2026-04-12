@@ -17,8 +17,7 @@ protocol WeatherRepositoryProtocol: Sendable {
 // MARK: - Weather Repository Implementation
  
 final class WeatherRepository: WeatherRepositoryProtocol {
-
-	
+	private let baseURL: String = AppConfig.WeatherAPI.baseURL
 	private let networkClient: NetworkClient
 	
 	init(networkClient: NetworkClient) {
@@ -26,7 +25,7 @@ final class WeatherRepository: WeatherRepositoryProtocol {
 	}
 	
 	func getWeather(latitude: Double, longitude: Double) async throws -> Weather {
-		guard let url = URL(string: "https://localhost:7238/api/weather/current?lat=\(latitude)&lon=\(longitude)") else {
+		guard let url = URL(string: "\(baseURL)/current?lat=\(latitude)&lon=\(longitude)") else {
 			throw NetworkError.invalidURL
 		}
 		let observations: [WeatherObservation] = try await networkClient.get(url: url)
@@ -37,7 +36,7 @@ final class WeatherRepository: WeatherRepositoryProtocol {
 	}
 	
 	func getForecast(latitude: Double, longitude: Double) async throws -> [WeatherForecast] {
-		guard let url = URL(string: "https://localhost:7238/api/weather/forecast?lat=\(latitude)&lon=\(longitude)") else {
+		guard let url = URL(string: "\(baseURL)/forecast?lat=\(latitude)&lon=\(longitude)") else {
 			throw NetworkError.invalidURL
 		}
 		

@@ -43,4 +43,8 @@ enum AppConfig {
     enum StormTypes {
         static let all = ["Thunderstorm", "Tornado", "Hail", "Lightning", "Flooding", "Other"]
     }
+        
+    enum  WeatherAPI {
+        static let baseURL = "https://localhost:7238/api/weather"
+    }
 }
