@@ -11,7 +11,7 @@ import Foundation
 
 protocol WeatherRepositoryProtocol: Sendable {
     func getWeather(latitude: Double, longitude: Double) async throws -> Weather
-    func getForecast(latitude: Double, longitude: Double) async throws -> [WeatherForecast]
+    func getForecast(latitude: Double, longitude: Double) async throws -> WeatherForecast
 }
 
 // MARK: - Weather Repository Implementation
@@ -28,14 +28,11 @@ final class WeatherRepository: WeatherRepositoryProtocol, @unchecked Sendable {
 		guard let url = URL(string: "\(baseURL)/current?lat=\(latitude)&lon=\(longitude)") else {
 			throw NetworkError.invalidURL
 		}
-		let observations: [WeatherObservation] = try await networkClient.get(url: url)
-		guard let observation = observations.first else {
-			throw NetworkError.invalidResponse
-		}
+		let observation: WeatherObservation = try await networkClient.get(url: url)
 		return Weather(from: observation)
 	}
 	
-	func getForecast(latitude: Double, longitude: Double) async throws -> [WeatherForecast] {
+	func getForecast(latitude: Double, longitude: Double) async throws -> WeatherForecast {
 		guard let url = URL(string: "\(baseURL)/forecast?lat=\(latitude)&lon=\(longitude)") else {
 			throw NetworkError.invalidURL
 		}

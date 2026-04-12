@@ -56,7 +56,8 @@ actor NetworkClient {
             return try decoder.decode(T.self, from: data)
         } catch let error as NetworkError {
             throw error
-        } catch is DecodingError {
+        } catch let error as DecodingError {
+            print("Decoding error: \(error)")
             throw NetworkError.decodingError
         } catch {
             throw NetworkError.networkError

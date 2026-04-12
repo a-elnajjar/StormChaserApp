@@ -13,7 +13,7 @@ import Observation
 enum WeatherState {
     case idle
     case loading
-    case success(Weather, [WeatherForecast])
+    case success(Weather, WeatherForecast)
     case error(String)
 }
 

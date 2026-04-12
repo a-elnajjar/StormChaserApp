@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WeatherView: View {
     let weather: Weather
-	let forecasts: [WeatherForecast]
+	let forecast: WeatherForecast
     let latitude: Double
     let longitude: Double
 
@@ -46,13 +46,13 @@ struct WeatherView: View {
                 .cornerRadius(8)
             }
 
-			if let source = forecasts.first, !source.periods.isEmpty {
+			if !forecast.periods.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("7-Day Forecast")
                         .font(.headline)
                         .padding(.bottom, 4)
 
-					ForEach(source.periods, id: \.name) { period in
+					ForEach(forecast.periods, id: \.name) { period in
                         HStack {
                             Text(period.name)
                                 .font(.subheadline)
@@ -93,12 +93,10 @@ struct WeatherView: View {
         description: "Partly Cloudy",
         observedAt: Date()
     )
-    let forecasts = [
-        WeatherForecast(source: "Preview", location: "New York", periods: [
+    let forecast = WeatherForecast(source: "Preview", location: "New York", periods: [
             ForecastPeriod(name: "Tonight", temperature: 65, windSpeed: "8 mph", windDirection: "N", description: "Clear"),
             ForecastPeriod(name: "Monday", temperature: 74, windSpeed: "12 mph", windDirection: "NE", description: "Sunny"),
             ForecastPeriod(name: "Monday Night", temperature: 60, windSpeed: "5 mph", windDirection: "S", description: "Cloudy"),
         ])
-    ]
-    WeatherView(weather: weather, forecasts: forecasts, latitude: 40.7128, longitude: -74.0060)
+    WeatherView(weather: weather, forecast: forecast, latitude: 40.7128, longitude: -74.0060)
 }

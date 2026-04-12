@@ -6,7 +6,9 @@
 //
 
 import CoreLocation
+import MapKit
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     @State private var weatherVM = WeatherViewModel(
@@ -33,8 +35,8 @@ struct ContentView: View {
                     case .idle, .loading:
                         WeatherSkeletonView()
 
-                    case let .success(weather, forecasts):
-                        WeatherView(weather: weather, forecasts: forecasts, latitude: latitude, longitude: longitude)
+                    case let .success(weather, forecast):
+                        WeatherView(weather: weather, forecast: forecast, latitude: latitude, longitude: longitude)
 
                     case let .error(message):
                         ErrorView(message: message)
