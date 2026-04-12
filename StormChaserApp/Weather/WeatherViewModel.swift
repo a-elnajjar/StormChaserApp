@@ -24,9 +24,6 @@ enum WeatherState {
 class WeatherViewModel {
 	
     var state: WeatherState = .idle
-	
-	 var current: [Weather] = []
-	 var forecast: [WeatherForecast] = []
 
     private let weatherRepo: WeatherRepositoryProtocol
 

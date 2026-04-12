@@ -29,7 +29,11 @@ final class WeatherRepository: WeatherRepositoryProtocol {
 		guard let url = URL(string: "https://localhost:7238/api/weather/current?lat=\(latitude)&lon=\(longitude)") else {
 			throw NetworkError.invalidURL
 		}
-		return try await networkClient.get(url: url)
+		let observations: [WeatherObservation] = try await networkClient.get(url: url)
+		guard let observation = observations.first else {
+			throw NetworkError.invalidResponse
+		}
+		return Weather(from: observation)
 	}
 	
 	func getForecast(latitude: Double, longitude: Double) async throws -> [WeatherForecast] {

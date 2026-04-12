@@ -21,7 +21,7 @@ struct WeatherView: View {
 
                 Text(weather.description)
                     .font(.headline)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
             }
 
             VStack(spacing: 12) {
@@ -59,7 +59,7 @@ struct WeatherView: View {
                                 .frame(width: 120, alignment: .leading)
 							Text(period.description ?? "")
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .lineLimit(1)
                             Spacer()
 							Text("\(period.temperature ?? 0, specifier: "%.1f")°C")

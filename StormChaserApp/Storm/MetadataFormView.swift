@@ -42,7 +42,7 @@ struct MetadataFormView: View {
                     ), in: 1 ... 4, step: 1)
                     Text("Level \(intensity)")
                         .font(.caption)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                 }
 
                 Section("Duration") {

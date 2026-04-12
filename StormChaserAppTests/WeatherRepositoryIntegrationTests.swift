@@ -6,14 +6,11 @@ struct WeatherRepositoryIntegrationTests {
     func getWeather_returnsData() async throws {
         let repository = WeatherRepository(networkClient: NetworkClient())
 
-        let weatherList = try await repository.getWeather(
+        let weather = try await repository.getWeather(
             latitude: AppConfig.Locations.newYorkCityLatitude,
             longitude: AppConfig.Locations.newYorkCityLongitude
         )
 
-        #expect(!weatherList.isEmpty)
-
-        let weather = try #require(weatherList.first)
         #expect(!weather.source.isEmpty)
         #expect(!weather.location.isEmpty)
         #expect(!weather.windSpeed.isEmpty)

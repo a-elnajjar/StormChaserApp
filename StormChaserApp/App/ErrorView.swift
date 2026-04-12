@@ -13,19 +13,19 @@ struct ErrorView: View {
         VStack(spacing: 20) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.system(size: 40))
-                .foregroundColor(.red)
+                .foregroundStyle(.red)
 
             Text("Error")
                 .font(.title2)
                 .fontWeight(.bold)
 
             Text(message)
-                .foregroundColor(.gray)
+                .foregroundStyle(.gray)
                 .multilineTextAlignment(.center)
 
             Text("Pull down to retry")
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
         }
         .padding()
     }

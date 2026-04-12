@@ -36,17 +36,6 @@ enum NetworkError: LocalizedError {
 
 actor NetworkClient {
     private let session: URLSession
-	@MainActor private static let iso8601WithFractionalSeconds: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return formatter
-    }()
-
-	@MainActor private static let iso8601WithoutFractionalSeconds: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime]
-        return formatter
-    }()
 
     init(session: URLSession = .shared) {
         self.session = session
@@ -66,11 +55,17 @@ actor NetworkClient {
                 let container = try decoder.singleValueContainer()
                 let rawValue = try container.decode(String.self)
 
-                if let date = Self.iso8601WithFractionalSeconds.date(from: rawValue) {
+                let formatterWithFractionalSeconds = ISO8601DateFormatter()
+                formatterWithFractionalSeconds.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+                let formatterWithoutFractionalSeconds = ISO8601DateFormatter()
+                formatterWithoutFractionalSeconds.formatOptions = [.withInternetDateTime]
+
+                if let date = formatterWithFractionalSeconds.date(from: rawValue) {
                     return date
                 }
 
-                if let date = Self.iso8601WithoutFractionalSeconds.date(from: rawValue) {
+                if let date = formatterWithoutFractionalSeconds.date(from: rawValue) {
                     return date
                 }
 

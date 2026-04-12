@@ -41,7 +41,7 @@ struct CameraView: View {
                             VStack(spacing: 12) {
                                 Image(systemName: "camera.fill")
                                     .font(.system(size: 50))
-                                    .foregroundColor(.blue)
+                                    .foregroundStyle(.blue)
                                 Text("No Photo Selected")
                                     .font(.headline)
                             }

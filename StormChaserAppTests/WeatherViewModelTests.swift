@@ -5,13 +5,22 @@ import Testing
 // MARK: - Mock
 
 final class MockWeatherRepository: WeatherRepositoryProtocol {
-    var currentToReturn: [Weather] = []
+    var currentToReturn: Weather?
     var forecastToReturn: [WeatherForecast] = []
     var errorToThrow: Error?
 
-    func getWeather(latitude _: Double, longitude _: Double) async throws -> [Weather] {
+    func getWeather(latitude _: Double, longitude _: Double) async throws -> Weather {
         if let error = errorToThrow { throw error }
-        return currentToReturn
+        return currentToReturn ?? Weather(
+            source: "weather.gov",
+            location: "KNYC",
+            temperature: 0,
+            windSpeed: "N/A",
+            windDirection: "N/A",
+            humidity: 0,
+            description: "No description",
+            observedAt: Date()
+        )
     }
 
     func getForecast(latitude _: Double, longitude _: Double) async throws -> [WeatherForecast] {
@@ -24,19 +33,17 @@ final class MockWeatherRepository: WeatherRepositoryProtocol {
 
 @MainActor
 struct WeatherViewModelTests {
-    private func makeCurrentWeather() -> [Weather] {
-        [
-            Weather(
-                source: "weather.gov",
-                location: "KNYC",
-                temperature: 11.1,
-                windSpeed: "9.4",
-                windDirection: "N/A",
-                humidity: 34.7,
-                description: "Clear",
-                observedAt: Date()
-            ),
-        ]
+    private func makeCurrentWeather() -> Weather {
+        Weather(
+            source: "weather.gov",
+            location: "KNYC",
+            temperature: 11.1,
+            windSpeed: "9.4",
+            windDirection: "N/A",
+            humidity: 34.7,
+            description: "Clear",
+            observedAt: Date()
+        )
     }
 
     private func makeForecast() -> [WeatherForecast] {
@@ -77,8 +84,7 @@ struct WeatherViewModelTests {
         await viewModel.fetchWeather(latitude: 40.7128, longitude: -74.0060)
 
         if case let .success(current, forecast) = viewModel.state {
-            #expect(current.count == 1)
-            #expect(current.first?.location == "KNYC")
+            #expect(current.location == "KNYC")
             #expect(forecast.count == 1)
             #expect(forecast.first?.periods.isEmpty == false)
         } else {

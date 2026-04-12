@@ -55,6 +55,15 @@ final class CameraViewModel {
     }
 
     func saveStorm(photo: UIImage, modelContext: ModelContext) {
+        let trimmedDuration = duration.trimmingCharacters(in: .whitespacesAndNewlines)
+        let parsedDuration = trimmedDuration.isEmpty ? nil : Int(trimmedDuration)
+
+        if !trimmedDuration.isEmpty, parsedDuration == nil {
+            alertMessage = "Duration must be a whole number of minutes."
+            showSuccessAlert = true
+            return
+        }
+
         let repository = StormRepository(modelContext: modelContext)
         let storm = Storm(
             photoData: photo.jpegData(compressionQuality: 0.8),
@@ -68,7 +77,7 @@ final class CameraViewModel {
             notes: notes,
             stormType: stormType,
             intensity: intensity,
-            duration: Int(duration)
+            duration: parsedDuration
         )
 
         Task {

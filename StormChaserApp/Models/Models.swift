@@ -21,7 +21,6 @@ struct WeatherObservation: Codable, Sendable {
 	let humidity: Double?
 	let description: String?
 	let observedAt: Date
-	let forecasts: [ForecastPeriod]
 }
 
 struct ForecastPeriod: Codable, Sendable {
@@ -76,18 +75,6 @@ struct Weather: Codable, Sendable {
 		self.observedAt    = obs.observedAt
 	}
 
-	// Codable init — must also be present when you define any init
-	init(from decoder: Decoder) throws {
-		let c = try decoder.container(keyedBy: CodingKeys.self)
-		source        = try c.decode(String.self, forKey: .source)
-		location      = try c.decode(String.self, forKey: .location)
-		temperature   = try c.decodeIfPresent(Double.self, forKey: .temperature) ?? 0
-		windSpeed     = try c.decodeIfPresent(String.self, forKey: .windSpeed) ?? "N/A"
-		windDirection = try c.decodeIfPresent(String.self, forKey: .windDirection) ?? "N/A"
-		humidity      = try c.decodeIfPresent(Double.self, forKey: .humidity) ?? 0
-		description   = try c.decodeIfPresent(String.self, forKey: .description) ?? "No description"
-		observedAt    = try c.decode(Date.self,   forKey: .observedAt)
-	}
 }
 
 
