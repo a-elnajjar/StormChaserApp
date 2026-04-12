@@ -36,6 +36,17 @@ enum NetworkError: LocalizedError {
 
 actor NetworkClient {
     private let session: URLSession
+	@MainActor private static let iso8601WithFractionalSeconds: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+
+	@MainActor private static let iso8601WithoutFractionalSeconds: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter
+    }()
 
     init(session: URLSession = .shared) {
         self.session = session
@@ -50,10 +61,28 @@ actor NetworkClient {
             else {
                 throw NetworkError.invalidResponse
             }
-			let decoder = JSONDecoder()
-			decoder.dateDecodingStrategy = .iso8601
-			let decoded = try decoder.decode(T.self, from: data)
-			return decoded
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .custom { decoder in
+                let container = try decoder.singleValueContainer()
+                let rawValue = try container.decode(String.self)
+
+                if let date = Self.iso8601WithFractionalSeconds.date(from: rawValue) {
+                    return date
+                }
+
+                if let date = Self.iso8601WithoutFractionalSeconds.date(from: rawValue) {
+                    return date
+                }
+
+                throw DecodingError.dataCorruptedError(
+                    in: container,
+                    debugDescription: "Unsupported ISO8601 date format: \(rawValue)"
+                )
+            }
+            let decoded = try decoder.decode(T.self, from: data)
+            return decoded
+        } catch let error as NetworkError {
+            throw error
         } catch is DecodingError {
             throw NetworkError.decodingError
         } catch {

@@ -5,12 +5,18 @@ import Testing
 // MARK: - Mock
 
 final class MockWeatherRepository: WeatherRepositoryProtocol {
-    var weatherToReturn: Weather?
+    var currentToReturn: [Weather] = []
+    var forecastToReturn: [WeatherForecast] = []
     var errorToThrow: Error?
 
-    func getWeather(latitude _: Double, longitude _: Double) async throws -> Weather {
+    func getWeather(latitude _: Double, longitude _: Double) async throws -> [Weather] {
         if let error = errorToThrow { throw error }
-        return weatherToReturn!
+        return currentToReturn
+    }
+
+    func getForecast(latitude _: Double, longitude _: Double) async throws -> [WeatherForecast] {
+        if let error = errorToThrow { throw error }
+        return forecastToReturn
     }
 }
 
@@ -18,13 +24,38 @@ final class MockWeatherRepository: WeatherRepositoryProtocol {
 
 @MainActor
 struct WeatherViewModelTests {
-    // MARK: Helpers
-
-    private func makeWeather() -> Weather {
-        Weather(temperature: 72, windSpeed: "10 mph", windDirection: "NE", humidity: 65, description: "Sunny", forecast: [])
+    private func makeCurrentWeather() -> [Weather] {
+        [
+            Weather(
+                source: "weather.gov",
+                location: "KNYC",
+                temperature: 11.1,
+                windSpeed: "9.4",
+                windDirection: "N/A",
+                humidity: 34.7,
+                description: "Clear",
+                observedAt: Date()
+            ),
+        ]
     }
 
-    // MARK: Tests
+    private func makeForecast() -> [WeatherForecast] {
+        [
+            WeatherForecast(
+                source: "weather.gov",
+                location: "KNYC",
+                periods: [
+                    ForecastPeriod(
+                        name: "Tonight",
+                        temperature: 8.0,
+                        windSpeed: "8",
+                        windDirection: "NW",
+                        description: "Clear"
+                    ),
+                ]
+            ),
+        ]
+    }
 
     @Test("Initial state is idle")
     func initialState_isIdle() {
@@ -36,17 +67,20 @@ struct WeatherViewModelTests {
         }
     }
 
-    @Test("Fetch success transitions state to success")
+    @Test("Fetch success transitions state to success with current and forecast")
     func fetchWeather_success_stateIsSuccess() async {
         let mock = MockWeatherRepository()
-        mock.weatherToReturn = makeWeather()
+        mock.currentToReturn = makeCurrentWeather()
+        mock.forecastToReturn = makeForecast()
         let viewModel = WeatherViewModel(repository: mock)
 
         await viewModel.fetchWeather(latitude: 40.7128, longitude: -74.0060)
 
-        if case let .success(weather) = viewModel.state {
-            #expect(weather.temperature == 72)
-            #expect(weather.description == "Sunny")
+        if case let .success(current, forecast) = viewModel.state {
+            #expect(current.count == 1)
+            #expect(current.first?.location == "KNYC")
+            #expect(forecast.count == 1)
+            #expect(forecast.first?.periods.isEmpty == false)
         } else {
             Issue.record("Expected .success, got \(viewModel.state)")
         }

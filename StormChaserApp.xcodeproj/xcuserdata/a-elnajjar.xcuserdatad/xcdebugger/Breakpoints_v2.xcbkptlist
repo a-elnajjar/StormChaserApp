@@ -3,4 +3,96 @@
    uuid = "AE992C26-5518-44E8-BDC1-2172FACF2A6A"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "52AD9664-8155-45DC-BA03-B9F06C631389"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StormChaserApp/Weather/WeatherRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "getWeather(latitude:longitude:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AEE6DBB5-576B-43C5-BE8E-BED5DAF46130"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StormChaserApp/Weather/WeatherRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "getWeather(latitude:longitude:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "AEE6DBB5-576B-43C5-BE8E-BED5DAF46130 - 93749d31eac3f77e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for StormChaserApp.WeatherRepository.getWeather(latitude: Swift.Double, longitude: Swift.Double) async throws -&gt; StormChaserApp.Weather"
+                  moduleName = "StormChaserApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/a-elnajjar/Documents/GitHub/StormChaserApp/StormChaserApp/Weather/WeatherRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32">
+               </Location>
+               <Location
+                  uuid = "AEE6DBB5-576B-43C5-BE8E-BED5DAF46130 - 85719582ca9b2669"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for StormChaserApp.WeatherRepository.getWeather(latitude: Swift.Double, longitude: Swift.Double) async throws -&gt; StormChaserApp.Weather"
+                  moduleName = "StormChaserApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/a-elnajjar/Documents/GitHub/StormChaserApp/StormChaserApp/Weather/WeatherRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32">
+               </Location>
+               <Location
+                  uuid = "AEE6DBB5-576B-43C5-BE8E-BED5DAF46130 - 31973c61aca2b40"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for StormChaserApp.WeatherRepository.getWeather(latitude: Swift.Double, longitude: Swift.Double) async throws -&gt; StormChaserApp.Weather"
+                  moduleName = "StormChaserApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/a-elnajjar/Documents/GitHub/StormChaserApp/StormChaserApp/Weather/WeatherRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32">
+               </Location>
+               <Location
+                  uuid = "AEE6DBB5-576B-43C5-BE8E-BED5DAF46130 - 4b347f40d2d5c541"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for StormChaserApp.WeatherRepository.getWeather(latitude: Swift.Double, longitude: Swift.Double) async throws -&gt; StormChaserApp.Weather"
+                  moduleName = "StormChaserApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/a-elnajjar/Documents/GitHub/StormChaserApp/StormChaserApp/Weather/WeatherRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

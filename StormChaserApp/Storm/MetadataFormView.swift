@@ -64,7 +64,7 @@ struct MetadataFormView: View {
                             HStack {
                                 Text("Temperature")
                                 Spacer()
-                                Text(temp.formattedTemperature())
+                                Text("\(temp, specifier: "%.1f")°C")
                                     .fontWeight(.semibold)
                             }
                         }

@@ -44,7 +44,11 @@ final class CameraViewModel {
         }
 
         if let lat = currentLocation?.lat, let lon = currentLocation?.lon {
-            weatherData = try? await weatherRepository.getWeather(latitude: lat, longitude: lon)
+            do {
+                weatherData = try await weatherRepository.getWeather(latitude: lat, longitude: lon)
+            } catch {
+                
+            }
         }
 
         showMetadataForm = true
@@ -54,9 +58,9 @@ final class CameraViewModel {
         let repository = StormRepository(modelContext: modelContext)
         let storm = Storm(
             photoData: photo.jpegData(compressionQuality: 0.8),
-            temperature: weatherData?.temperature,
-            humidity: weatherData?.humidity,
-            windSpeed: weatherData?.windSpeed,
+			temperature: weatherData?.temperature,
+			humidity: weatherData?.humidity,
+			windSpeed: weatherData?.windSpeed,
             weatherDescription: weatherData?.description,
             latitude: currentLocation?.lat ?? AppConfig.Locations.newYorkCityLatitude,
             longitude: currentLocation?.lon ?? AppConfig.Locations.newYorkCityLongitude,
