@@ -50,32 +50,10 @@ actor NetworkClient {
             else {
                 throw NetworkError.invalidResponse
             }
+
             let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .custom { decoder in
-                let container = try decoder.singleValueContainer()
-                let rawValue = try container.decode(String.self)
-
-                let formatterWithFractionalSeconds = ISO8601DateFormatter()
-                formatterWithFractionalSeconds.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
-                let formatterWithoutFractionalSeconds = ISO8601DateFormatter()
-                formatterWithoutFractionalSeconds.formatOptions = [.withInternetDateTime]
-
-                if let date = formatterWithFractionalSeconds.date(from: rawValue) {
-                    return date
-                }
-
-                if let date = formatterWithoutFractionalSeconds.date(from: rawValue) {
-                    return date
-                }
-
-                throw DecodingError.dataCorruptedError(
-                    in: container,
-                    debugDescription: "Unsupported ISO8601 date format: \(rawValue)"
-                )
-            }
-            let decoded = try decoder.decode(T.self, from: data)
-            return decoded
+            decoder.dateDecodingStrategy = .custom(Self.DateDecodingStrategy)
+            return try decoder.decode(T.self, from: data)
         } catch let error as NetworkError {
             throw error
         } catch is DecodingError {
@@ -83,5 +61,28 @@ actor NetworkClient {
         } catch {
             throw NetworkError.networkError
         }
+    }
+
+    private static func DateDecodingStrategy(from decoder: Decoder) throws -> Date {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+
+        let formatOptions: [ISO8601DateFormatter.Options] = [
+            [.withInternetDateTime, .withFractionalSeconds],
+            [.withInternetDateTime]
+        ]
+
+        for options in formatOptions {
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = options
+            if let date = formatter.date(from: rawValue) {
+                return date
+            }
+        }
+
+        throw DecodingError.dataCorruptedError(
+            in: container,
+            debugDescription: "Unsupported ISO8601 date format: \(rawValue)"
+        )
     }
 }

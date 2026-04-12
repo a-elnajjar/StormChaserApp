@@ -38,8 +38,9 @@ final class CameraViewModel {
 
         if let city = debugCity {
             currentLocation = (city.latitude, city.longitude)
-        } else if userLocation != nil {
-            // weather.gov only covers the US, so NYC is used as the fixed location
+        } else if let userLocation = userLocation {
+            currentLocation = (userLocation.latitude, userLocation.longitude)
+        } else {
             currentLocation = (AppConfig.Locations.newYorkCityLatitude, AppConfig.Locations.newYorkCityLongitude)
         }
 
@@ -47,7 +48,9 @@ final class CameraViewModel {
             do {
                 weatherData = try await weatherRepository.getWeather(latitude: lat, longitude: lon)
             } catch {
-                
+                weatherData = nil
+                alertMessage = "Could not load weather data: \(error.localizedDescription)"
+                showSuccessAlert = true
             }
         }
 

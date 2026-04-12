@@ -17,11 +17,11 @@ struct ContentView: View {
     @Environment(AppState.self) private var appState
 
     private var latitude: Double {
-        appState.debugCity?.latitude ?? AppConfig.Locations.newYorkCityLatitude
+        appState.debugCity?.latitude ?? appState.userLocation?.latitude ?? AppConfig.Locations.newYorkCityLatitude
     }
 
     private var longitude: Double {
-        appState.debugCity?.longitude ?? AppConfig.Locations.newYorkCityLongitude
+        appState.debugCity?.longitude ?? appState.userLocation?.longitude ?? AppConfig.Locations.newYorkCityLongitude
     }
 
     var body: some View {

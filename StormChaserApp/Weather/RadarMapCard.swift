@@ -124,9 +124,13 @@ struct RadarMapCard: View {
         guard let url = URL(string: "https://api.rainviewer.com/public/weather-maps.json") else { return }
 
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let response = try JSONDecoder().decode(RainViewerResponse.self, from: data)
-            if let latest = response.radar.past.last {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                return
+            }
+            let decoded = try JSONDecoder().decode(RainViewerResponse.self, from: data)
+            if let latest = decoded.radar.past.last {
                 radarPath = latest.path
                 radarTime = Date(timeIntervalSince1970: TimeInterval(latest.time))
             }
