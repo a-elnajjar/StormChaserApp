@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+@MainActor
 protocol StormRepositoryProtocol {
     func addStorm(_ storm: Storm) async throws
     func getStorms() async throws -> [Storm]

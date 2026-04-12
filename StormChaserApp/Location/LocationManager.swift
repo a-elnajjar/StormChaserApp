@@ -9,6 +9,7 @@ import CoreLocation
 import Foundation
 
 @Observable
+@MainActor
 class LocationManager: NSObject, CLLocationManagerDelegate {
     @ObservationIgnored private let locationManager = CLLocationManager()
 

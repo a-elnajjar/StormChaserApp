@@ -16,7 +16,7 @@ protocol WeatherRepositoryProtocol: Sendable {
 
 // MARK: - Weather Repository Implementation
  
-final class WeatherRepository: WeatherRepositoryProtocol {
+final class WeatherRepository: WeatherRepositoryProtocol, @unchecked Sendable {
 	private let baseURL: String = AppConfig.WeatherAPI.baseURL
 	private let networkClient: NetworkClient
 	
