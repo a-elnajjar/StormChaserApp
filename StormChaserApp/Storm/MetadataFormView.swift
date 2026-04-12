@@ -42,7 +42,7 @@ struct MetadataFormView: View {
                     ), in: 1 ... 4, step: 1)
                     Text("Level \(intensity)")
                         .font(.caption)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                 }
 
                 Section("Duration") {
@@ -64,7 +64,7 @@ struct MetadataFormView: View {
                             HStack {
                                 Text("Temperature")
                                 Spacer()
-                                Text(temp.formattedTemperature())
+                                Text("\(temp, specifier: "%.1f")°C")
                                     .fontWeight(.semibold)
                             }
                         }

@@ -15,7 +15,7 @@ struct DetailRow: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(label)
                 .font(.caption)
-                .foregroundColor(.gray)
+                .foregroundStyle(.gray)
             Text(value)
                 .font(.body)
                 .fontWeight(.semibold)

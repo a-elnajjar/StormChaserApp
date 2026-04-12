@@ -33,8 +33,10 @@ struct ContentView: View {
                     case .idle, .loading:
                         WeatherSkeletonView()
 
-                    case let .success(weather):
-                        WeatherView(weather: weather, latitude: latitude, longitude: longitude)
+                    case let .success(weather,forecasts):
+//							if let weather = weather {
+								WeatherView(weather: weather, forecasts: forecasts , latitude: latitude, longitude: longitude)
+							//}
 
                     case let .error(message):
                         ErrorView(message: message)

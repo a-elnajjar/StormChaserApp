@@ -33,12 +33,12 @@ struct StormHistoryView: View {
                     VStack(spacing: 20) {
                         Image(systemName: "cloud.fill")
                             .font(.system(size: 50))
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                         Text("No Storms Documented")
                             .font(.headline)
                         Text("Document storms to see them here")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                     }
                     .frame(maxHeight: .infinity)
                 }

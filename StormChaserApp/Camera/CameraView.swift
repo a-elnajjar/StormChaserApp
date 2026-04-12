@@ -21,10 +21,10 @@ struct CameraView: View {
                         notes: $cameraVM.notes,
                         intensity: $cameraVM.intensity,
                         duration: $cameraVM.duration,
-                        temperature: cameraVM.weatherData?.temperature,
-                        humidity: cameraVM.weatherData?.humidity,
-                        windSpeed: cameraVM.weatherData?.windSpeed,
-                        weatherDescription: cameraVM.weatherData?.description,
+						temperature: cameraVM.weatherData?.temperature,
+						humidity: cameraVM.weatherData?.humidity,
+						windSpeed: cameraVM.weatherData?.windSpeed,
+						weatherDescription: cameraVM.weatherData?.description,
                         latitude: cameraVM.currentLocation?.lat ?? 0,
                         longitude: cameraVM.currentLocation?.lon ?? 0,
                         onSave: { cameraVM.saveStorm(photo: photo, modelContext: modelContext) }
@@ -41,7 +41,7 @@ struct CameraView: View {
                             VStack(spacing: 12) {
                                 Image(systemName: "camera.fill")
                                     .font(.system(size: 50))
-                                    .foregroundColor(.blue)
+                                    .foregroundStyle(.blue)
                                 Text("No Photo Selected")
                                     .font(.headline)
                             }

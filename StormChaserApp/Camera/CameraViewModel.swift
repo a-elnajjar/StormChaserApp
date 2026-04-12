@@ -44,19 +44,32 @@ final class CameraViewModel {
         }
 
         if let lat = currentLocation?.lat, let lon = currentLocation?.lon {
-            weatherData = try? await weatherRepository.getWeather(latitude: lat, longitude: lon)
+            do {
+                weatherData = try await weatherRepository.getWeather(latitude: lat, longitude: lon)
+            } catch {
+                
+            }
         }
 
         showMetadataForm = true
     }
 
     func saveStorm(photo: UIImage, modelContext: ModelContext) {
+        let trimmedDuration = duration.trimmingCharacters(in: .whitespacesAndNewlines)
+        let parsedDuration = trimmedDuration.isEmpty ? nil : Int(trimmedDuration)
+
+        if !trimmedDuration.isEmpty, parsedDuration == nil {
+            alertMessage = "Duration must be a whole number of minutes."
+            showSuccessAlert = true
+            return
+        }
+
         let repository = StormRepository(modelContext: modelContext)
         let storm = Storm(
             photoData: photo.jpegData(compressionQuality: 0.8),
-            temperature: weatherData?.temperature,
-            humidity: weatherData?.humidity,
-            windSpeed: weatherData?.windSpeed,
+			temperature: weatherData?.temperature,
+			humidity: weatherData?.humidity,
+			windSpeed: weatherData?.windSpeed,
             weatherDescription: weatherData?.description,
             latitude: currentLocation?.lat ?? AppConfig.Locations.newYorkCityLatitude,
             longitude: currentLocation?.lon ?? AppConfig.Locations.newYorkCityLongitude,
@@ -64,7 +77,7 @@ final class CameraViewModel {
             notes: notes,
             stormType: stormType,
             intensity: intensity,
-            duration: Int(duration)
+            duration: parsedDuration
         )
 
         Task {

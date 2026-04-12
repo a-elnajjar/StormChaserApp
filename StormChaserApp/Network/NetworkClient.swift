@@ -50,9 +50,34 @@ actor NetworkClient {
             else {
                 throw NetworkError.invalidResponse
             }
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .custom { decoder in
+                let container = try decoder.singleValueContainer()
+                let rawValue = try container.decode(String.self)
 
-            let decoded = try JSONDecoder().decode(T.self, from: data)
+                let formatterWithFractionalSeconds = ISO8601DateFormatter()
+                formatterWithFractionalSeconds.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+                let formatterWithoutFractionalSeconds = ISO8601DateFormatter()
+                formatterWithoutFractionalSeconds.formatOptions = [.withInternetDateTime]
+
+                if let date = formatterWithFractionalSeconds.date(from: rawValue) {
+                    return date
+                }
+
+                if let date = formatterWithoutFractionalSeconds.date(from: rawValue) {
+                    return date
+                }
+
+                throw DecodingError.dataCorruptedError(
+                    in: container,
+                    debugDescription: "Unsupported ISO8601 date format: \(rawValue)"
+                )
+            }
+            let decoded = try decoder.decode(T.self, from: data)
             return decoded
+        } catch let error as NetworkError {
+            throw error
         } catch is DecodingError {
             throw NetworkError.decodingError
         } catch {

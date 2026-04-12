@@ -9,18 +9,19 @@ import SwiftUI
 
 struct WeatherView: View {
     let weather: Weather
+	let forecasts: [WeatherForecast]
     let latitude: Double
     let longitude: Double
 
     var body: some View {
         VStack(spacing: 24) {
             VStack(spacing: 8) {
-                Text(weather.temperature.formattedTemperature())
+                Text("\(weather.temperature, specifier: "%.1f")°C")
                     .font(.system(size: 64, weight: .bold))
 
                 Text(weather.description)
                     .font(.headline)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
             }
 
             VStack(spacing: 12) {
@@ -45,25 +46,25 @@ struct WeatherView: View {
                 .cornerRadius(8)
             }
 
-            if !weather.forecast.isEmpty {
+			if let source = forecasts.first, !source.periods.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("7-Day Forecast")
                         .font(.headline)
                         .padding(.bottom, 4)
 
-                    ForEach(weather.forecast, id: \.name) { period in
+					ForEach(source.periods, id: \.name) { period in
                         HStack {
                             Text(period.name)
                                 .font(.subheadline)
                                 .frame(width: 120, alignment: .leading)
-                            Text(period.description)
+							Text(period.description ?? "")
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .lineLimit(1)
                             Spacer()
-                            Text(period.temperature.formattedTemperature())
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
+							Text("\(period.temperature ?? 0, specifier: "%.1f")°C")
+								.font(.subheadline)
+								.fontWeight(.semibold)
                         }
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
@@ -82,11 +83,11 @@ struct WeatherView: View {
 }
 
 #Preview {
-    let weather = Weather(temperature: 72.5, windSpeed: "10 mph", windDirection: "NE", humidity: 65, description: "Partly Cloudy",
-                          forecast: [
-                              ForecastPeriod(name: "Tonight", temperature: 65, windSpeed: "8 mph", description: "Clear"),
-                              ForecastPeriod(name: "Monday", temperature: 74, windSpeed: "12 mph", description: "Sunny"),
-                              ForecastPeriod(name: "Monday Night", temperature: 60, windSpeed: "5 mph", description: "Cloudy"),
-                          ])
-    WeatherView(weather: weather, latitude: 40.7128, longitude: -74.0060)
+//    let weather = Weather(temperature: 72.5, windSpeed: "10 mph", windDirection: "NE", humidity: 65, description: "Partly Cloudy",
+//                          forecast: [
+//                              ForecastPeriod(name: "Tonight", temperature: 65, windSpeed: "8 mph", description: "Clear"),
+//                              ForecastPeriod(name: "Monday", temperature: 74, windSpeed: "12 mph", description: "Sunny"),
+//                              ForecastPeriod(name: "Monday Night", temperature: 60, windSpeed: "5 mph", description: "Cloudy"),
+//                          ])
+//    WeatherView(weather: weather, latitude: 40.7128, longitude: -74.0060)
 }

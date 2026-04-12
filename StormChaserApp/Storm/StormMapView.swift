@@ -21,7 +21,7 @@ struct StormMapView: View {
                     VStack(spacing: 8) {
                         Image(systemName: "pin.fill")
                             .font(.system(size: 24))
-                            .foregroundColor(.red)
+                            .foregroundStyle(.red)
                             .shadow(radius: 4)
                     }
                 }
@@ -44,12 +44,12 @@ struct StormMapView: View {
                 HStack(spacing: 12) {
                     Image(systemName: "mappin.circle.fill")
                         .font(.system(size: 18))
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Location")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
 
                         Text(String(format: "%.4f, %.4f", latitude, longitude))
                             .font(.body)
