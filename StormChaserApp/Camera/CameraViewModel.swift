@@ -57,7 +57,7 @@ final class CameraViewModel {
         showMetadataForm = true
     }
 
-    func saveStorm(photo: UIImage, modelContext: ModelContext) {
+    func saveStorm(photo: UIImage, modelContext: ModelContext) async {
         let trimmedDuration = duration.trimmingCharacters(in: .whitespacesAndNewlines)
         let parsedDuration = trimmedDuration.isEmpty ? nil : Int(trimmedDuration)
 
@@ -83,16 +83,14 @@ final class CameraViewModel {
             duration: parsedDuration
         )
 
-        Task {
-            do {
-                try await repository.addStorm(storm)
-                alertMessage = "Storm saved successfully!\n\nType: \(stormType)\nLocation: \(String(format: "%.2f°, %.2f°", currentLocation?.lat ?? 0, currentLocation?.lon ?? 0))"
-                showSuccessAlert = true
-                resetForm()
-            } catch {
-                alertMessage = "Failed to save storm: \(error.localizedDescription)"
-                showSuccessAlert = true
-            }
+        do {
+            try await repository.addStorm(storm)
+            alertMessage = "Storm saved successfully!\n\nType: \(stormType)\nLocation: \(String(format: "%.2f°, %.2f°", currentLocation?.lat ?? 0, currentLocation?.lon ?? 0))"
+            showSuccessAlert = true
+            resetForm()
+        } catch {
+            alertMessage = "Failed to save storm: \(error.localizedDescription)"
+            showSuccessAlert = true
         }
     }
 

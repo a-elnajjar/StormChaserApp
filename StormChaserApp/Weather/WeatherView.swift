@@ -83,11 +83,22 @@ struct WeatherView: View {
 }
 
 #Preview {
-//    let weather = Weather(temperature: 72.5, windSpeed: "10 mph", windDirection: "NE", humidity: 65, description: "Partly Cloudy",
-//                          forecast: [
-//                              ForecastPeriod(name: "Tonight", temperature: 65, windSpeed: "8 mph", description: "Clear"),
-//                              ForecastPeriod(name: "Monday", temperature: 74, windSpeed: "12 mph", description: "Sunny"),
-//                              ForecastPeriod(name: "Monday Night", temperature: 60, windSpeed: "5 mph", description: "Cloudy"),
-//                          ])
-//    WeatherView(weather: weather, latitude: 40.7128, longitude: -74.0060)
+    let weather = Weather(
+        source: "Preview",
+        location: "New York",
+        temperature: 72.5,
+        windSpeed: "10 mph",
+        windDirection: "NE",
+        humidity: 65,
+        description: "Partly Cloudy",
+        observedAt: Date()
+    )
+    let forecasts = [
+        WeatherForecast(source: "Preview", location: "New York", periods: [
+            ForecastPeriod(name: "Tonight", temperature: 65, windSpeed: "8 mph", windDirection: "N", description: "Clear"),
+            ForecastPeriod(name: "Monday", temperature: 74, windSpeed: "12 mph", windDirection: "NE", description: "Sunny"),
+            ForecastPeriod(name: "Monday Night", temperature: 60, windSpeed: "5 mph", windDirection: "S", description: "Cloudy"),
+        ])
+    ]
+    WeatherView(weather: weather, forecasts: forecasts, latitude: 40.7128, longitude: -74.0060)
 }

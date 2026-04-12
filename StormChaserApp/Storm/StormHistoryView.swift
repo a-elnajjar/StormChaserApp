@@ -64,4 +64,5 @@ struct StormHistoryView: View {
 
 #Preview {
     StormHistoryView()
+        .modelContainer(for: Storm.self, inMemory: true)
 }

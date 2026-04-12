@@ -19,7 +19,7 @@ struct MetadataFormView: View {
     let weatherDescription: String?
     let latitude: Double
     let longitude: Double
-    let onSave: () -> Void
+    let onSave: () async -> Void
 
     @Environment(\.dismiss) var dismiss
 
@@ -118,8 +118,10 @@ struct MetadataFormView: View {
 
                 Section {
                     Button(action: {
-                        onSave()
-                        dismiss()
+                        Task {
+                            await onSave()
+                            dismiss()
+                        }
                     }) {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")

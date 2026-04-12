@@ -27,7 +27,7 @@ struct CameraView: View {
 						weatherDescription: cameraVM.weatherData?.description,
                         latitude: cameraVM.currentLocation?.lat ?? 0,
                         longitude: cameraVM.currentLocation?.lon ?? 0,
-                        onSave: { cameraVM.saveStorm(photo: photo, modelContext: modelContext) }
+                        onSave: { await cameraVM.saveStorm(photo: photo, modelContext: modelContext) }
                     )
                 } else {
                     Group {

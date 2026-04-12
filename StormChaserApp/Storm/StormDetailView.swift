@@ -13,7 +13,7 @@ struct StormDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                StormMapView(latitude: storm.latitude, longitude: storm.longitude,)
+                StormMapView(latitude: storm.latitude, longitude: storm.longitude)
 
                 if let photoData = storm.photoData,
                    let uiImage = UIImage(data: photoData)

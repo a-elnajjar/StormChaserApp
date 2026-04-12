@@ -44,7 +44,11 @@ enum AppConfig {
         static let all = ["Thunderstorm", "Tornado", "Hail", "Lightning", "Flooding", "Other"]
     }
         
-    enum  WeatherAPI {
+    enum WeatherAPI {
+        #if DEBUG
         static let baseURL = "https://localhost:7238/api/weather"
+        #else
+        static let baseURL = "https://your-production-server.com/api/weather"
+        #endif
     }
 }
