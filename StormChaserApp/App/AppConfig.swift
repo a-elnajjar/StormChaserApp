@@ -46,7 +46,7 @@ enum AppConfig {
         
     enum WeatherAPI {
         #if DEBUG
-        static let baseURL = "http://localhost:5046/api/weather"
+        static let baseURL = "http://localhost:5171/api/weather"
         #else
         static let baseURL = "https://your-production-server.com/api/weather"
         #endif

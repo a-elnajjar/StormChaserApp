@@ -130,7 +130,7 @@ The API provides two endpoints:
 
 ## Known Limitations
 
-- **Weather location** — Falls back to NYC coordinates when GPS is unavailable; debug city picker available for testing other locations
+
 - **No offline support** — Requires a network connection and the backend API for weather fetches
 - **No cloud sync** — Storm data is stored locally on-device via SwiftData
 - **Dark mode** — Supported via SwiftUI system defaults but not explicitly designed for
