@@ -22,6 +22,10 @@ struct WeatherView: View {
                 Text(weather.description)
                     .font(.headline)
                     .foregroundStyle(.gray)
+
+                Text("Last updated \(weather.observedAt, style: .relative) ago")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             VStack(spacing: 12) {

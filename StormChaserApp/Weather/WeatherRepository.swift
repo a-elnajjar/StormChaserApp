@@ -29,15 +29,31 @@ final class WeatherRepository: WeatherRepositoryProtocol, @unchecked Sendable {
 		guard let url = URL(string: "\(baseURL)/current?country=\(country)&lat=\(latitude)&lon=\(longitude)") else {
 			throw NetworkError.invalidURL
 		}
-		let observation: WeatherObservation = try await networkClient.get(url: url)
+		var request = URLRequest(url: url)
+		request.cachePolicy = AppConfig.CachePolicies.currentWeather
+		let observation: WeatherObservation = try await fetchWithOfflineFallback(request: request)
 		return Weather(from: observation)
 	}
-	
+
 	func getForecast(country:String,latitude: Double, longitude: Double) async throws -> WeatherForecast {
 		guard let url = URL(string: "\(baseURL)/forecast?country=\(country)&lat=\(latitude)&lon=\(longitude)") else {
 			throw NetworkError.invalidURL
 		}
-		
-		return try await networkClient.get(url: url)
+
+		var request = URLRequest(url: url)
+		request.cachePolicy = AppConfig.CachePolicies.forecast
+		return try await fetchWithOfflineFallback(request: request)
+	}
+
+	// Falls back to URLCache when the network round-trip fails, so the
+	// last successful payload still renders while offline.
+	private func fetchWithOfflineFallback<T: Decodable>(request: URLRequest) async throws -> T {
+		do {
+			return try await networkClient.get(request: request)
+		} catch {
+			var cached = request
+			cached.cachePolicy = .returnCacheDataDontLoad
+			return try await networkClient.get(request: cached)
+		}
 	}
 }

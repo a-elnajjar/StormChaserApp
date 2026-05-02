@@ -37,13 +37,23 @@ enum NetworkError: LocalizedError {
 actor NetworkClient {
     private let session: URLSession
 
-    init(session: URLSession = .shared) {
+    init() {
+        self.session = URLCacheProvider.createConfiguredSession()
+    }
+
+    init(session: URLSession) {
         self.session = session
     }
 
     func get<T: Decodable>(url: URL) async throws -> T {
+        var request = URLRequest(url: url)
+        request.cachePolicy = .useProtocolCachePolicy
+        return try await get(request: request)
+    }
+
+    func get<T: Decodable>(request: URLRequest) async throws -> T {
         do {
-            let (data, response) = try await session.data(from: url)
+            let (data, response) = try await session.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse,
                   (200 ... 299).contains(httpResponse.statusCode)
@@ -63,6 +73,7 @@ actor NetworkClient {
             throw NetworkError.networkError
         }
     }
+    
 
     private static func DateDecodingStrategy(from decoder: Decoder) throws -> Date {
         let container = try decoder.singleValueContainer()
