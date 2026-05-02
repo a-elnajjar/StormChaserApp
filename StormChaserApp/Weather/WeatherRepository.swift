@@ -10,8 +10,8 @@ import Foundation
 // MARK: - Weather Repository Protocol
 
 protocol WeatherRepositoryProtocol: Sendable {
-    func getWeather(latitude: Double, longitude: Double) async throws -> Weather
-    func getForecast(latitude: Double, longitude: Double) async throws -> WeatherForecast
+    func getWeather(country:String,latitude: Double, longitude: Double) async throws -> Weather
+    func getForecast(country:String,latitude: Double, longitude: Double) async throws -> WeatherForecast
 }
 
 // MARK: - Weather Repository Implementation
@@ -24,16 +24,17 @@ final class WeatherRepository: WeatherRepositoryProtocol, @unchecked Sendable {
 		self.networkClient = networkClient
 	}
 	
-	func getWeather(latitude: Double, longitude: Double) async throws -> Weather {
-		guard let url = URL(string: "\(baseURL)/current?lat=\(latitude)&lon=\(longitude)") else {
+	func getWeather(country:String, latitude: Double, longitude: Double) async throws -> Weather {
+	
+		guard let url = URL(string: "\(baseURL)/current?country=\(country)&lat=\(latitude)&lon=\(longitude)") else {
 			throw NetworkError.invalidURL
 		}
 		let observation: WeatherObservation = try await networkClient.get(url: url)
 		return Weather(from: observation)
 	}
 	
-	func getForecast(latitude: Double, longitude: Double) async throws -> WeatherForecast {
-		guard let url = URL(string: "\(baseURL)/forecast?lat=\(latitude)&lon=\(longitude)") else {
+	func getForecast(country:String,latitude: Double, longitude: Double) async throws -> WeatherForecast {
+		guard let url = URL(string: "\(baseURL)/forecast?country=\(country)&lat=\(latitude)&lon=\(longitude)") else {
 			throw NetworkError.invalidURL
 		}
 		

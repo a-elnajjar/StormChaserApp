@@ -16,6 +16,7 @@ struct ContentView: View {
     )
     @State private var showSettings = false
     @State private var locationTitle = "Weather"
+	@State private var countryCode: String = ""
     @Environment(AppState.self) private var appState
 
     private var latitude: Double {
@@ -90,18 +91,20 @@ struct ContentView: View {
     }
 
     private func fetchWeatherData() async {
-        await weatherVM.fetchWeather(latitude: latitude, longitude: longitude)
+		await weatherVM.fetchWeather(country:countryCode , latitude: latitude, longitude: longitude)
     }
 
     private func resolveLocationTitle() async {
         if let city = appState.debugCity {
             locationTitle = city.name
+			countryCode = city.countryCode
             return
         }
         let location = CLLocation(latitude: latitude, longitude: longitude)
         let placemarks = try? await CLGeocoder().reverseGeocodeLocation(location)
         if let place = placemarks?.first {
             locationTitle = place.locality ?? place.administrativeArea ?? "Weather"
+			countryCode = place.isoCountryCode ?? "" 
         }
     }
 }
