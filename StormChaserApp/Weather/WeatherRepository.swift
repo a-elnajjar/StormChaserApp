@@ -16,7 +16,7 @@ protocol WeatherRepositoryProtocol: Sendable {
 
 // MARK: - Weather Repository Implementation
  
-final class WeatherRepository: WeatherRepositoryProtocol, @unchecked Sendable {
+actor WeatherRepository: WeatherRepositoryProtocol {
 	private let baseURL: String = AppConfig.WeatherAPI.baseURL
 	private let networkClient: NetworkClient
 	
@@ -45,9 +45,7 @@ final class WeatherRepository: WeatherRepositoryProtocol, @unchecked Sendable {
 		return try await fetchWithOfflineFallback(request: request)
 	}
 
-	// Falls back to URLCache when the network round-trip fails, so the
-	// last successful payload still renders while offline.
-	private func fetchWithOfflineFallback<T: Decodable>(request: URLRequest) async throws -> T {
+	private func fetchWithOfflineFallback<T: Decodable & Sendable>(request: URLRequest) async throws -> T {
 		do {
 			return try await networkClient.get(request: request)
 		} catch {

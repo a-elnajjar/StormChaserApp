@@ -59,18 +59,18 @@ enum AppConfig {
         
     enum WeatherAPI {
         #if DEBUG
-        static let baseURL = "http://localhost:5171/api/weather"
+        nonisolated static let baseURL = "http://localhost:5171/api/weather"
 		//static let baseURL = "http://localhost:8080/api/v1/weather"
         #else
-        static let baseURL = "https://your-production-server.com/api/weather"
+        nonisolated static let baseURL = "https://your-production-server.com/api/weather"
         #endif
     }
 
     // MARK: - Cache Policies
 
     enum CachePolicies {
-        static let currentWeather: URLRequest.CachePolicy = .useProtocolCachePolicy
-        static let forecast: URLRequest.CachePolicy = .returnCacheDataElseLoad
-        static let `default`: URLRequest.CachePolicy = .useProtocolCachePolicy
+        nonisolated static let currentWeather: URLRequest.CachePolicy = .useProtocolCachePolicy
+        nonisolated static let forecast: URLRequest.CachePolicy = .returnCacheDataElseLoad
+        nonisolated static let `default`: URLRequest.CachePolicy = .useProtocolCachePolicy
     }
 }

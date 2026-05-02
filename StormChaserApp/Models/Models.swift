@@ -12,7 +12,7 @@ import Foundation
 
 // MARK: - API Response Model (maps directly from .NET API)
 
-struct WeatherObservation: Codable, Sendable {
+struct WeatherObservation: Sendable {
 	let source: String
 	let location: String
 	let temperature: Double?
@@ -23,7 +23,9 @@ struct WeatherObservation: Codable, Sendable {
 	let observedAt: Date
 }
 
-struct ForecastPeriod: Codable, Sendable {
+nonisolated extension WeatherObservation: Codable {}
+
+struct ForecastPeriod: Sendable {
 	let name: String
 	let temperature: Double?
 	let windSpeed: String?
@@ -31,9 +33,11 @@ struct ForecastPeriod: Codable, Sendable {
 	let description: String?
 }
 
+nonisolated extension ForecastPeriod: Codable {}
+
 // MARK: - Domain Model
 
-struct Weather: Codable, Sendable {
+struct Weather: Sendable {
 	let source: String
 	let location: String
 	let temperature: Double
@@ -64,7 +68,7 @@ struct Weather: Codable, Sendable {
 	}
 
 	// separate init — no conflict with Codable
-	init(from obs: WeatherObservation) {
+	nonisolated init(from obs: WeatherObservation) {
 		self.source        = obs.source
 		self.location      = obs.location
 		self.temperature   = obs.temperature ?? 0
@@ -77,10 +81,14 @@ struct Weather: Codable, Sendable {
 
 }
 
+nonisolated extension Weather: Codable {}
 
 
-struct WeatherForecast: Codable, Sendable {
+
+struct WeatherForecast: Sendable {
 	let source: String
 	let location: String
 	let periods: [ForecastPeriod]
 }
+
+nonisolated extension WeatherForecast: Codable {}

@@ -45,13 +45,13 @@ actor NetworkClient {
         self.session = session
     }
 
-    func get<T: Decodable>(url: URL) async throws -> T {
+    func get<T: Decodable & Sendable>(url: URL) async throws -> T {
         var request = URLRequest(url: url)
         request.cachePolicy = .useProtocolCachePolicy
         return try await get(request: request)
     }
 
-    func get<T: Decodable>(request: URLRequest) async throws -> T {
+    func get<T: Decodable & Sendable>(request: URLRequest) async throws -> T {
         do {
             let (data, response) = try await session.data(for: request)
 
