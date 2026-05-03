@@ -1,11 +1,12 @@
-//create a view for the forecast chart using the Charts framework
-import SwiftUI
 import Charts
+
+// create a view for the forecast chart using the Charts framework
+import SwiftUI
 
 struct WeatherPeriod: Identifiable {
     let id = UUID()
     let name: String
-    let temperature: Double  
+    let temperature: Double
     let description: String
 }
 
@@ -29,13 +30,12 @@ struct ForecastChartView: View {
 
 #Preview {
     ForecastChartView(forecast: [
-        WeatherPeriod(name: "Tonight",    temperature: 62, description: "Clear"),
-        WeatherPeriod(name: "Monday",     temperature: 75, description: "Sunny"),
-        WeatherPeriod(name: "Mon Night",  temperature: 58, description: "Partly Cloudy"),
-        WeatherPeriod(name: "Tuesday",    temperature: 70, description: "Mostly Sunny"),
-        WeatherPeriod(name: "Tue Night",  temperature: 55, description: "Cloudy"),
-        WeatherPeriod(name: "Wednesday",  temperature: 68, description: "Rain"),
-        WeatherPeriod(name: "Thursday",   temperature: 68, description: "Rain")
+        WeatherPeriod(name: "Tonight", temperature: 62, description: "Clear"),
+        WeatherPeriod(name: "Monday", temperature: 75, description: "Sunny"),
+        WeatherPeriod(name: "Mon Night", temperature: 58, description: "Partly Cloudy"),
+        WeatherPeriod(name: "Tuesday", temperature: 70, description: "Mostly Sunny"),
+        WeatherPeriod(name: "Tue Night", temperature: 55, description: "Cloudy"),
+        WeatherPeriod(name: "Wednesday", temperature: 68, description: "Rain"),
+        WeatherPeriod(name: "Thursday", temperature: 68, description: "Rain"),
     ])
 }
-

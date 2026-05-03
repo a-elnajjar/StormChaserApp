@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct StormDetailView: View {
-    let storm: Storm
+    let storm: StormSnapshot
     @Environment(\.dismiss) var dismiss
 
     var body: some View {

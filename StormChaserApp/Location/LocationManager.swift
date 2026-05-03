@@ -57,13 +57,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-		switch manager.authorizationStatus {
-		case .authorizedWhenInUse, .authorizedAlways:
-			startUpdatingLocation()
-		case .denied, .restricted:
-			isLocationAvailable = false
-		default:
-			break
-		}
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:
+            startUpdatingLocation()
+        case .denied, .restricted:
+            isLocationAvailable = false
+        default:
+            break
+        }
     }
 }

@@ -23,12 +23,12 @@ final class AppDependencies {
         AppState(locationManager: locationManager)
     }
 
-    func makeStormRepository(modelContext: ModelContext) -> StormRepositoryProtocol {
-        StormRepository(modelContext: modelContext)
+    func makeStormRepository(container: ModelContainer) -> StormRepositoryProtocol {
+        StormRepository(modelContainer: container)
     }
 
-    func makeStormViewModel(modelContext: ModelContext) -> StormViewModel {
-        StormViewModel(repository: makeStormRepository(modelContext: modelContext))
+    func makeStormViewModel(container: ModelContainer) -> StormViewModel {
+        StormViewModel(repository: makeStormRepository(container: container))
     }
 
     static func live() -> AppDependencies {

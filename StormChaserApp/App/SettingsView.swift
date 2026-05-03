@@ -13,7 +13,7 @@ struct SettingsView: View {
 
     @AppStorage("debugEnabled") private var debugEnabled: Bool = false
     @AppStorage("selectedDebugCityName") private var selectedDebugCityName: String = ""
-    
+
     var body: some View {
         @Bindable var appState = appState
 
@@ -33,7 +33,7 @@ struct SettingsView: View {
                             Button {
                                 appState.debugCity = city
                                 selectedDebugCityName = city.name
-                                
+
                             } label: {
                                 HStack {
                                     Text(city.name)

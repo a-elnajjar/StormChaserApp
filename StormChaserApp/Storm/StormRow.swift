@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StormRow: View {
-    let storm: Storm
+    let storm: StormSnapshot
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

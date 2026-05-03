@@ -45,7 +45,7 @@ private struct RadarMapViewRepresentable: UIViewRepresentable {
         return map
     }
 
-    func updateUIView(_ map: MKMapView, context: Context) {
+    func updateUIView(_ map: MKMapView, context _: Context) {
         map.removeOverlays(map.overlays)
         if let path = radarPath {
             let urlTemplate = "https://tilecache.rainviewer.com\(path)/256/{z}/{x}/{y}/2/1_1.png"
@@ -56,7 +56,7 @@ private struct RadarMapViewRepresentable: UIViewRepresentable {
     }
 
     class Coordinator: NSObject, MKMapViewDelegate {
-        func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        func mapView(_: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             guard let tile = overlay as? MKTileOverlay else {
                 return MKOverlayRenderer(overlay: overlay)
             }
@@ -126,7 +126,8 @@ struct RadarMapCard: View {
         do {
             let (data, response) = try await URLSession.shared.data(from: url)
             guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
+                  (200 ... 299).contains(httpResponse.statusCode)
+            else {
                 return
             }
             let decoded = try JSONDecoder().decode(RainViewerResponse.self, from: data)

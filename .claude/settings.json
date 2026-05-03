@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(swiftformat --version)",
+      "Bash(xcodebuild -project StormChaserApp.xcodeproj -scheme StormChaserApp -destination 'platform=iOS Simulator,name=iPhone 16' -quiet build)",
+      "Bash(xcrun simctl *)"
+    ]
+  }
+}

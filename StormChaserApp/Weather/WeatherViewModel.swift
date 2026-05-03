@@ -22,7 +22,6 @@ enum WeatherState {
 @Observable
 @MainActor
 class WeatherViewModel {
-	
     var state: WeatherState = .idle
 
     private let weatherRepo: WeatherRepositoryProtocol
@@ -32,12 +31,12 @@ class WeatherViewModel {
     }
 
     func fetchWeather(country: String, latitude: Double, longitude: Double) async {
-		state = .loading
-	
+        state = .loading
+
         do {
-			async let current  = weatherRepo.getWeather(country:country , latitude: latitude, longitude: longitude)
-			async let forecast = weatherRepo.getForecast(country:country ,latitude: latitude, longitude: longitude)
-			state = .success(try await current, try await forecast)
+            async let current = weatherRepo.getWeather(country: country, latitude: latitude, longitude: longitude)
+            async let forecast = weatherRepo.getForecast(country: country, latitude: latitude, longitude: longitude)
+            state = try .success(await current, await forecast)
         } catch let error as NetworkError {
             self.state = .error(error.errorDescription ?? "Unknown error")
         } catch {

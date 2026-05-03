@@ -12,7 +12,7 @@ import SwiftUI
 @MainActor
 class AppState {
     var locationManager: LocationManager
-    var debugCity: AppConfig.DebugCity? = nil
+    var debugCity: AppConfig.DebugCity?
 
     var userLocation: CLLocationCoordinate2D? {
         locationManager.userLocation

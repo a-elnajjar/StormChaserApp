@@ -11,7 +11,7 @@ import SwiftData
 @Observable
 @MainActor
 class StormViewModel {
-    var storms: [Storm] = []
+    var storms: [StormSnapshot] = []
     var errorMessage: String?
     private let repository: StormRepositoryProtocol
 
@@ -28,20 +28,20 @@ class StormViewModel {
         }
     }
 
-    func addStorm(_ storm: Storm) async {
+    func addStorm(_ snapshot: StormSnapshot) async {
         do {
-            try await repository.addStorm(storm)
-            storms.insert(storm, at: 0)
+            try await repository.addStorm(snapshot)
+            storms.insert(snapshot, at: 0)
             errorMessage = nil
         } catch {
             errorMessage = "Failed to save storm: \(error.localizedDescription)"
         }
     }
 
-    func deleteStorm(_ storm: Storm) async {
+    func deleteStorm(_ snapshot: StormSnapshot) async {
         do {
-            try await repository.deleteStorm(storm)
-            storms.removeAll { $0.id == storm.id }
+            try await repository.deleteStorm(id: snapshot.id)
+            storms.removeAll { $0.id == snapshot.id }
             errorMessage = nil
         } catch {
             errorMessage = "Failed to delete storm: \(error.localizedDescription)"

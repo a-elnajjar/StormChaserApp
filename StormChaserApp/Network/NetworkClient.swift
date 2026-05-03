@@ -38,7 +38,7 @@ actor NetworkClient {
     private let session: URLSession
 
     init() {
-        self.session = URLCacheProvider.createConfiguredSession()
+        session = URLCacheProvider.createConfiguredSession()
     }
 
     init(session: URLSession) {
@@ -73,7 +73,6 @@ actor NetworkClient {
             throw NetworkError.networkError
         }
     }
-    
 
     private static func DateDecodingStrategy(from decoder: Decoder) throws -> Date {
         let container = try decoder.singleValueContainer()
@@ -81,7 +80,7 @@ actor NetworkClient {
 
         let formatOptions: [ISO8601DateFormatter.Options] = [
             [.withInternetDateTime, .withFractionalSeconds],
-            [.withInternetDateTime]
+            [.withInternetDateTime],
         ]
 
         for options in formatOptions {

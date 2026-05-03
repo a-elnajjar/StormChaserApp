@@ -27,113 +27,113 @@ struct MetadataFormView: View {
 
     var body: some View {
         Form {
-                Section("Storm Type") {
-                    Picker("Type", selection: $stormType) {
-                        ForEach(stormTypes, id: \.self) { type in
-                            Text(type).tag(type)
-                        }
+            Section("Storm Type") {
+                Picker("Type", selection: $stormType) {
+                    ForEach(stormTypes, id: \.self) { type in
+                        Text(type).tag(type)
                     }
-                }
-
-                Section("Intensity") {
-                    Slider(value: Binding<Double>(
-                        get: { Double(intensity) },
-                        set: { intensity = Int($0) }
-                    ), in: 1 ... 4, step: 1)
-                    Text("Level \(intensity)")
-                        .font(.caption)
-                        .foregroundStyle(.gray)
-                }
-
-                Section("Duration") {
-                    HStack {
-                        TextField("Minutes", text: $duration)
-                            .keyboardType(.numberPad)
-                        Text("min")
-                    }
-                }
-
-                Section("Notes") {
-                    TextEditor(text: $notes)
-                        .frame(height: 100)
-                }
-
-                Section("Weather Conditions") {
-                    VStack(alignment: .leading, spacing: 8) {
-                        if let temp = temperature {
-                            HStack {
-                                Text("Temperature")
-                                Spacer()
-                                Text("\(temp, specifier: "%.1f")°C")
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                        if let humidity = humidity {
-                            HStack {
-                                Text("Humidity")
-                                Spacer()
-                                Text("\(Int(humidity))%")
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                        if let wind = windSpeed {
-                            HStack {
-                                Text("Wind")
-                                Spacer()
-                                Text(wind)
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                        if let desc = weatherDescription {
-                            HStack {
-                                Text("Conditions")
-                                Spacer()
-                                Text(desc)
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                    }
-                    .font(.subheadline)
-                }
-
-                Section("Location") {
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text("Latitude")
-                            Spacer()
-                            Text(String(format: "%.4f", latitude))
-                                .fontWeight(.semibold)
-                                .font(.caption)
-                        }
-                        HStack {
-                            Text("Longitude")
-                            Spacer()
-                            Text(String(format: "%.4f", longitude))
-                                .fontWeight(.semibold)
-                                .font(.caption)
-                        }
-                    }
-                    .font(.subheadline)
-                }
-
-                Section {
-                    Button(action: {
-                        Task {
-                            await onSave()
-                            dismiss()
-                        }
-                    }) {
-                        HStack {
-                            Image(systemName: "checkmark.circle.fill")
-                            Text("Save Storm")
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
                 }
             }
-            .navigationTitle("Storm Details")
-            .navigationBarTitleDisplayMode(.inline)
+
+            Section("Intensity") {
+                Slider(value: Binding<Double>(
+                    get: { Double(intensity) },
+                    set: { intensity = Int($0) }
+                ), in: 1 ... 4, step: 1)
+                Text("Level \(intensity)")
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+            }
+
+            Section("Duration") {
+                HStack {
+                    TextField("Minutes", text: $duration)
+                        .keyboardType(.numberPad)
+                    Text("min")
+                }
+            }
+
+            Section("Notes") {
+                TextEditor(text: $notes)
+                    .frame(height: 100)
+            }
+
+            Section("Weather Conditions") {
+                VStack(alignment: .leading, spacing: 8) {
+                    if let temp = temperature {
+                        HStack {
+                            Text("Temperature")
+                            Spacer()
+                            Text("\(temp, specifier: "%.1f")°C")
+                                .fontWeight(.semibold)
+                        }
+                    }
+                    if let humidity = humidity {
+                        HStack {
+                            Text("Humidity")
+                            Spacer()
+                            Text("\(Int(humidity))%")
+                                .fontWeight(.semibold)
+                        }
+                    }
+                    if let wind = windSpeed {
+                        HStack {
+                            Text("Wind")
+                            Spacer()
+                            Text(wind)
+                                .fontWeight(.semibold)
+                        }
+                    }
+                    if let desc = weatherDescription {
+                        HStack {
+                            Text("Conditions")
+                            Spacer()
+                            Text(desc)
+                                .fontWeight(.semibold)
+                        }
+                    }
+                }
+                .font(.subheadline)
+            }
+
+            Section("Location") {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Latitude")
+                        Spacer()
+                        Text(String(format: "%.4f", latitude))
+                            .fontWeight(.semibold)
+                            .font(.caption)
+                    }
+                    HStack {
+                        Text("Longitude")
+                        Spacer()
+                        Text(String(format: "%.4f", longitude))
+                            .fontWeight(.semibold)
+                            .font(.caption)
+                    }
+                }
+                .font(.subheadline)
+            }
+
+            Section {
+                Button(action: {
+                    Task {
+                        await onSave()
+                        dismiss()
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("Save Storm")
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+        .navigationTitle("Storm Details")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

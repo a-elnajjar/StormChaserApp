@@ -23,7 +23,7 @@ struct StormChaserApp: App {
         let schema = Schema([Storm.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {
-            return .success(try ModelContainer(for: schema, configurations: [modelConfiguration]))
+            return try .success(ModelContainer(for: schema, configurations: [modelConfiguration]))
         } catch {
             return .failure(error)
         }
@@ -32,12 +32,12 @@ struct StormChaserApp: App {
     var body: some Scene {
         WindowGroup {
             switch modelContainerResult {
-            case .success(let container):
+            case let .success(container):
                 ContentView()
                     .environment(appState)
-                    .environment(dependencies) 
+                    .environment(dependencies)
                     .modelContainer(container)
-            case .failure(let error):
+            case let .failure(error):
                 ErrorView(message: "Failed to load storage: \(error.localizedDescription)")
             }
         }

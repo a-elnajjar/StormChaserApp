@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Storm {
+final nonisolated class Storm {
     var id: UUID = UUID()
     var photoData: Data?
     var temperature: Double?

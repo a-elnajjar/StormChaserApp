@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WeatherView: View {
     let weather: Weather
-	let forecast: WeatherForecast
+    let forecast: WeatherForecast
     let latitude: Double
     let longitude: Double
 
@@ -50,25 +50,25 @@ struct WeatherView: View {
                 .cornerRadius(8)
             }
 
-			if !forecast.periods.isEmpty {
+            if !forecast.periods.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("7-Day Forecast")
                         .font(.headline)
                         .padding(.bottom, 4)
 
-					ForEach(forecast.periods, id: \.name) { period in
+                    ForEach(forecast.periods, id: \.name) { period in
                         HStack {
                             Text(period.name)
                                 .font(.subheadline)
                                 .frame(width: 120, alignment: .leading)
-							Text(period.description ?? "")
+                            Text(period.description ?? "")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                                 .lineLimit(1)
                             Spacer()
-							Text("\(period.temperature ?? 0, specifier: "%.1f")°C")
-								.font(.subheadline)
-								.fontWeight(.semibold)
+                            Text("\(period.temperature ?? 0, specifier: "%.1f")°C")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
                         }
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
@@ -98,9 +98,9 @@ struct WeatherView: View {
         observedAt: Date()
     )
     let forecast = WeatherForecast(source: "Preview", location: "New York", periods: [
-            ForecastPeriod(name: "Tonight", temperature: 65, windSpeed: "8 mph", windDirection: "N", description: "Clear"),
-            ForecastPeriod(name: "Monday", temperature: 74, windSpeed: "12 mph", windDirection: "NE", description: "Sunny"),
-            ForecastPeriod(name: "Monday Night", temperature: 60, windSpeed: "5 mph", windDirection: "S", description: "Cloudy"),
-        ])
+        ForecastPeriod(name: "Tonight", temperature: 65, windSpeed: "8 mph", windDirection: "N", description: "Clear"),
+        ForecastPeriod(name: "Monday", temperature: 74, windSpeed: "12 mph", windDirection: "NE", description: "Sunny"),
+        ForecastPeriod(name: "Monday Night", temperature: 60, windSpeed: "5 mph", windDirection: "S", description: "Cloudy"),
+    ])
     WeatherView(weather: weather, forecast: forecast, latitude: 40.7128, longitude: -74.0060)
 }

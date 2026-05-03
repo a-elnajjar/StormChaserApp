@@ -5,8 +5,8 @@
 //  Created by Abdalla Elnajjar on 2026-04-01.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct StormHistoryView: View {
     @Environment(\.modelContext) private var modelContext
@@ -48,7 +48,7 @@ struct StormHistoryView: View {
             .navigationTitle("Storm History")
             .navigationBarTitleDisplayMode(.inline)
             .task {
-                let vm = dependencies.makeStormViewModel(modelContext: modelContext)
+                let vm = dependencies.makeStormViewModel(container: modelContext.container)
                 stormVM = vm
                 await vm.fetchStorms()
             }

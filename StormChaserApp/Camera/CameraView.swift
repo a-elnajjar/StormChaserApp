@@ -5,6 +5,7 @@
 //  Created by Abdalla Elnajjar on 2026-04-01.
 //
 
+import SwiftData
 import SwiftUI
 
 struct CameraView: View {
@@ -22,16 +23,16 @@ struct CameraView: View {
                         notes: $cameraVM.notes,
                         intensity: $cameraVM.intensity,
                         duration: $cameraVM.duration,
-						temperature: cameraVM.weatherData?.temperature,
-						humidity: cameraVM.weatherData?.humidity,
-						windSpeed: cameraVM.weatherData?.windSpeed,
-						weatherDescription: cameraVM.weatherData?.description,
+                        temperature: cameraVM.weatherData?.temperature,
+                        humidity: cameraVM.weatherData?.humidity,
+                        windSpeed: cameraVM.weatherData?.windSpeed,
+                        weatherDescription: cameraVM.weatherData?.description,
                         latitude: cameraVM.currentLocation?.lat ?? 0,
                         longitude: cameraVM.currentLocation?.lon ?? 0,
                         onSave: {
                             await cameraVM.saveStorm(
                                 photo: photo,
-                                repository: dependencies.makeStormRepository(modelContext: modelContext)
+                                repository: dependencies.makeStormRepository(container: modelContext.container)
                             )
                         }
                     )

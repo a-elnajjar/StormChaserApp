@@ -1,7 +1,7 @@
 import Foundation
 
 struct StubWeatherRepository: WeatherRepositoryProtocol {
-    func getWeather(country: String, latitude: Double, longitude: Double) async throws -> Weather {
+    func getWeather(country _: String, latitude _: Double, longitude _: Double) async throws -> Weather {
         Weather(
             source: "stub",
             location: "Preview",
@@ -14,7 +14,7 @@ struct StubWeatherRepository: WeatherRepositoryProtocol {
         )
     }
 
-    func getForecast(country: String, latitude: Double, longitude: Double) async throws -> WeatherForecast {
+    func getForecast(country _: String, latitude _: Double, longitude _: Double) async throws -> WeatherForecast {
         WeatherForecast(
             source: "stub",
             location: "Preview",
