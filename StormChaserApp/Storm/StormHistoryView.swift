@@ -10,6 +10,7 @@ import SwiftData
 
 struct StormHistoryView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppDependencies.self) private var dependencies
     @State private var stormVM: StormViewModel?
 
     var body: some View {
@@ -47,7 +48,7 @@ struct StormHistoryView: View {
             .navigationTitle("Storm History")
             .navigationBarTitleDisplayMode(.inline)
             .task {
-                let vm = StormViewModel(repository: StormRepository(modelContext: modelContext))
+                let vm = dependencies.makeStormViewModel(modelContext: modelContext)
                 stormVM = vm
                 await vm.fetchStorms()
             }
@@ -65,5 +66,6 @@ struct StormHistoryView: View {
 
 #Preview {
     StormHistoryView()
+        .environment(AppDependencies.preview())
         .modelContainer(for: Storm.self, inMemory: true)
 }

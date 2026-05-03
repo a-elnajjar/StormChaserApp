@@ -86,5 +86,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
-        .environment(AppState())
+        .environment(AppDependencies.preview().makeAppState())
 }

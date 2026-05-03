@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 @Observable
@@ -22,9 +23,24 @@ final class AppDependencies {
         AppState(locationManager: locationManager)
     }
 
+    func makeStormRepository(modelContext: ModelContext) -> StormRepositoryProtocol {
+        StormRepository(modelContext: modelContext)
+    }
+
+    func makeStormViewModel(modelContext: ModelContext) -> StormViewModel {
+        StormViewModel(repository: makeStormRepository(modelContext: modelContext))
+    }
+
     static func live() -> AppDependencies {
         AppDependencies(
             weatherRepository: WeatherRepository(networkClient: NetworkClient()),
+            locationManager: LocationManager()
+        )
+    }
+
+    static func preview() -> AppDependencies {
+        AppDependencies(
+            weatherRepository: StubWeatherRepository(),
             locationManager: LocationManager()
         )
     }

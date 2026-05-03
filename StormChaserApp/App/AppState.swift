@@ -22,7 +22,7 @@ class AppState {
         locationManager.isLocationAvailable
     }
 
-    init() {
-        locationManager = LocationManager()
+    init(locationManager: LocationManager) {
+        self.locationManager = locationManager
     }
 }

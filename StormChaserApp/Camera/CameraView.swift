@@ -10,6 +10,7 @@ import SwiftUI
 struct CameraView: View {
     @State private var cameraVM = CameraViewModel()
     @Environment(AppState.self) private var appState
+    @Environment(AppDependencies.self) private var dependencies
     @Environment(\.modelContext) private var modelContext
 
     var body: some View {
@@ -27,7 +28,12 @@ struct CameraView: View {
 						weatherDescription: cameraVM.weatherData?.description,
                         latitude: cameraVM.currentLocation?.lat ?? 0,
                         longitude: cameraVM.currentLocation?.lon ?? 0,
-                        onSave: { await cameraVM.saveStorm(photo: photo, modelContext: modelContext) }
+                        onSave: {
+                            await cameraVM.saveStorm(
+                                photo: photo,
+                                repository: dependencies.makeStormRepository(modelContext: modelContext)
+                            )
+                        }
                     )
                 } else {
                     Group {
@@ -138,6 +144,8 @@ struct CameraCapture: UIViewControllerRepresentable {
 }
 
 #Preview {
-    CameraView()
-        .environment(AppState())
+    let dependencies = AppDependencies.preview()
+    return CameraView()
+        .environment(dependencies.makeAppState())
+        .environment(dependencies)
 }

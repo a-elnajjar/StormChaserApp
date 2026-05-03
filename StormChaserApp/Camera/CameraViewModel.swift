@@ -74,7 +74,7 @@ final class CameraViewModel {
 		return placemarks?.first?.isoCountryCode ?? "US"
 	}
 
-	func saveStorm(photo: UIImage, modelContext: ModelContext) async {
+	func saveStorm(photo: UIImage, repository: StormRepositoryProtocol) async {
 		let trimmedDuration = duration.trimmingCharacters(in: .whitespacesAndNewlines)
 		let parsedDuration = trimmedDuration.isEmpty ? nil : Int(trimmedDuration)
 
@@ -84,7 +84,6 @@ final class CameraViewModel {
 			return
 		}
 
-		let repository = StormRepository(modelContext: modelContext)
 		let storm = Storm(
 			photoData: photo.jpegData(compressionQuality: 0.8),
 			temperature: weatherData?.temperature,

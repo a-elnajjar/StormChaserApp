@@ -11,13 +11,12 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State private var weatherVM = WeatherViewModel(
-        repository: WeatherRepository(networkClient: NetworkClient())
-    )
+    @State private var weatherVM: WeatherViewModel?
     @State private var showSettings = false
     @State private var locationTitle = "Weather"
 	@State private var countryCode: String = ""
     @Environment(AppState.self) private var appState
+    @Environment(AppDependencies.self) private var dependencies
 
     private var latitude: Double {
         appState.debugCity?.latitude ?? appState.userLocation?.latitude ?? AppConfig.Locations.newYorkCityLatitude
@@ -32,7 +31,7 @@ struct ContentView: View {
             // Tab 1: Weather
             NavigationStack {
                 ScrollView {
-                    switch weatherVM.state {
+                    switch weatherVM?.state ?? .idle {
                     case .idle, .loading:
                         WeatherSkeletonView()
 
@@ -79,6 +78,9 @@ struct ContentView: View {
                 }
         }
         .task {
+            if weatherVM == nil {
+                weatherVM = dependencies.makeWeatherViewModel()
+            }
             await resolveLocationTitle()
             await fetchWeatherData()
         }
@@ -91,7 +93,7 @@ struct ContentView: View {
     }
 
     private func fetchWeatherData() async {
-		await weatherVM.fetchWeather(country:countryCode , latitude: latitude, longitude: longitude)
+		await weatherVM?.fetchWeather(country:countryCode , latitude: latitude, longitude: longitude)
     }
 
     private func resolveLocationTitle() async {
@@ -110,7 +112,9 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
-        .environment(AppState())
+    let dependencies = AppDependencies.preview()
+    return ContentView()
+        .environment(dependencies.makeAppState())
+        .environment(dependencies)
         .modelContainer(for: Storm.self, inMemory: true)
 }
