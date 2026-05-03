@@ -10,15 +10,15 @@ import SwiftUI
 
 // MARK: - RainViewer API Models
 
-private struct RainViewerResponse: Decodable {
+private nonisolated struct RainViewerResponse: Decodable, Sendable {
     let radar: RadarData
 }
 
-private struct RadarData: Decodable {
+private nonisolated struct RadarData: Decodable, Sendable {
     let past: [RadarFrame]
 }
 
-private struct RadarFrame: Decodable {
+private nonisolated struct RadarFrame: Decodable, Sendable {
     let time: Int
     let path: String
 }
@@ -71,6 +71,7 @@ struct RadarMapCard: View {
     let latitude: Double
     let longitude: Double
 
+    @Environment(AppDependencies.self) private var dependencies
     @State private var radarPath: String?
     @State private var radarTime: Date?
     @State private var isLoading = true
@@ -124,13 +125,7 @@ struct RadarMapCard: View {
         guard let url = URL(string: "https://api.rainviewer.com/public/weather-maps.json") else { return }
 
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200 ... 299).contains(httpResponse.statusCode)
-            else {
-                return
-            }
-            let decoded = try JSONDecoder().decode(RainViewerResponse.self, from: data)
+            let decoded: RainViewerResponse = try await dependencies.networkClient.get(url: url)
             if let latest = decoded.radar.past.last {
                 radarPath = latest.path
                 radarTime = Date(timeIntervalSince1970: TimeInterval(latest.time))
@@ -146,4 +141,5 @@ struct RadarMapCard: View {
         RadarMapCard(latitude: 40.7128, longitude: -74.0060)
             .padding()
     }
+    .environment(AppDependencies.preview())
 }

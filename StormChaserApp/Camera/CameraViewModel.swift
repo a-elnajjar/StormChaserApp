@@ -29,7 +29,7 @@ final class CameraViewModel {
 
     private let weatherRepository: WeatherRepositoryProtocol
 
-    init(weatherRepository: WeatherRepositoryProtocol = WeatherRepository(networkClient: NetworkClient())) {
+    init(weatherRepository: WeatherRepositoryProtocol) {
         self.weatherRepository = weatherRepository
     }
 

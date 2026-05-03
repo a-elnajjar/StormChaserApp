@@ -9,10 +9,14 @@ import SwiftData
 import SwiftUI
 
 struct CameraView: View {
-    @State private var cameraVM = CameraViewModel()
+    @State private var cameraVM: CameraViewModel
     @Environment(AppState.self) private var appState
     @Environment(AppDependencies.self) private var dependencies
     @Environment(\.modelContext) private var modelContext
+
+    init(cameraVM: CameraViewModel) {
+        _cameraVM = State(initialValue: cameraVM)
+    }
 
     var body: some View {
         NavigationStack {
@@ -146,7 +150,7 @@ struct CameraCapture: UIViewControllerRepresentable {
 
 #Preview {
     let dependencies = AppDependencies.preview()
-    return CameraView()
+    return CameraView(cameraVM: dependencies.makeCameraViewModel())
         .environment(dependencies.makeAppState())
         .environment(dependencies)
 }

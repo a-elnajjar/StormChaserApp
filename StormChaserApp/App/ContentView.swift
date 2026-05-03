@@ -14,7 +14,6 @@ struct ContentView: View {
     @State private var weatherVM: WeatherViewModel?
     @State private var showSettings = false
     @State private var locationTitle = "Weather"
-    @State private var countryCode: String = ""
     @Environment(AppState.self) private var appState
     @Environment(AppDependencies.self) private var dependencies
 
@@ -54,7 +53,7 @@ struct ContentView: View {
                     }
                 }
                 .refreshable {
-                    await fetchWeatherData()
+                    await loadCurrentLocation()
                 }
             }
             .sheet(isPresented: $showSettings) {
@@ -66,7 +65,7 @@ struct ContentView: View {
             }
 
             // Tab 2: Camera
-            CameraView()
+            CameraView(cameraVM: dependencies.makeCameraViewModel())
                 .tabItem {
                     Label("Document", systemImage: "camera")
                 }
@@ -81,33 +80,31 @@ struct ContentView: View {
             if weatherVM == nil {
                 weatherVM = dependencies.makeWeatherViewModel()
             }
-            await resolveLocationTitle()
-            await fetchWeatherData()
+            await loadCurrentLocation()
         }
         .onChange(of: appState.debugCity?.id) {
-            Task {
-                await resolveLocationTitle()
-                await fetchWeatherData()
-            }
+            Task { await loadCurrentLocation() }
         }
     }
 
-    private func fetchWeatherData() async {
-        await weatherVM?.fetchWeather(country: countryCode, latitude: latitude, longitude: longitude)
+    private func loadCurrentLocation() async {
+        let lat = latitude
+        let lon = longitude
+        let resolved = await resolveLocation(latitude: lat, longitude: lon)
+        locationTitle = resolved.title
+        await weatherVM?.fetchWeather(country: resolved.countryCode, latitude: lat, longitude: lon)
     }
 
-    private func resolveLocationTitle() async {
+    private func resolveLocation(latitude: Double, longitude: Double) async -> (title: String, countryCode: String) {
         if let city = appState.debugCity {
-            locationTitle = city.name
-            countryCode = city.countryCode
-            return
+            return (city.name, city.countryCode)
         }
         let location = CLLocation(latitude: latitude, longitude: longitude)
         let placemarks = try? await CLGeocoder().reverseGeocodeLocation(location)
         if let place = placemarks?.first {
-            locationTitle = place.locality ?? place.administrativeArea ?? "Weather"
-            countryCode = place.isoCountryCode ?? ""
+            return (place.locality ?? place.administrativeArea ?? "Weather", place.isoCountryCode ?? "")
         }
+        return ("Weather", "")
     }
 }
 
