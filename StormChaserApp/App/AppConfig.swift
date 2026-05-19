@@ -72,6 +72,7 @@ enum AppConfig {
     enum CachePolicies {
         nonisolated static let currentWeather: URLRequest.CachePolicy = .useProtocolCachePolicy
         nonisolated static let forecast: URLRequest.CachePolicy = .returnCacheDataElseLoad
+		nonisolated static let posts: URLRequest.CachePolicy = .returnCacheDataElseLoad
         nonisolated static let `default`: URLRequest.CachePolicy = .useProtocolCachePolicy
     }
 }
