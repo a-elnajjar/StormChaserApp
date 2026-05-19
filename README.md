@@ -1,6 +1,6 @@
 # StoreChaser
 
-A take-home assessment for **Speer Technologies**, built for storm-chasing hobbyist meteorologists. StoreChaser lets users track the weather, document storms in the field, and review their storm history on an interactive map.
+built for storm-chasing hobbyist meteorologists. StoreChaser lets users track the weather, document storms in the field, and review their storm history on an interactive map.
 
 ---
 
