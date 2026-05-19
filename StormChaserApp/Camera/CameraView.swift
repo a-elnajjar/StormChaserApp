@@ -5,12 +5,18 @@
 //  Created by Abdalla Elnajjar on 2026-04-01.
 //
 
+import SwiftData
 import SwiftUI
 
 struct CameraView: View {
-    @State private var cameraVM = CameraViewModel()
+    @State private var cameraVM: CameraViewModel
     @Environment(AppState.self) private var appState
+    @Environment(AppDependencies.self) private var dependencies
     @Environment(\.modelContext) private var modelContext
+
+    init(cameraVM: CameraViewModel) {
+        _cameraVM = State(initialValue: cameraVM)
+    }
 
     var body: some View {
         NavigationStack {
@@ -27,7 +33,12 @@ struct CameraView: View {
                         weatherDescription: cameraVM.weatherData?.description,
                         latitude: cameraVM.currentLocation?.lat ?? 0,
                         longitude: cameraVM.currentLocation?.lon ?? 0,
-                        onSave: { cameraVM.saveStorm(photo: photo, modelContext: modelContext) }
+                        onSave: {
+                            await cameraVM.saveStorm(
+                                photo: photo,
+                                repository: dependencies.makeStormRepository(container: modelContext.container)
+                            )
+                        }
                     )
                 } else {
                     Group {
@@ -41,7 +52,7 @@ struct CameraView: View {
                             VStack(spacing: 12) {
                                 Image(systemName: "camera.fill")
                                     .font(.system(size: 50))
-                                    .foregroundColor(.blue)
+                                    .foregroundStyle(.blue)
                                 Text("No Photo Selected")
                                     .font(.headline)
                             }
@@ -64,7 +75,7 @@ struct CameraView: View {
 
                     if cameraVM.selectedImage != nil {
                         Button(action: {
-                            Task { await cameraVM.prepareMetadataForm(userLocation: appState.userLocation) }
+                            Task { await cameraVM.prepareMetadataForm(userLocation: appState.userLocation, debugCity: appState.debugCity) }
                         }) {
                             HStack {
                                 if cameraVM.isPreparingMetadata {
@@ -106,7 +117,7 @@ struct CameraCapture: UIViewControllerRepresentable {
 
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
-        picker.sourceType = .camera
+        picker.sourceType = UIImagePickerController.isSourceTypeAvailable(.camera) ? .camera : .photoLibrary
         picker.delegate = context.coordinator
         return picker
     }
@@ -138,6 +149,8 @@ struct CameraCapture: UIViewControllerRepresentable {
 }
 
 #Preview {
-    CameraView()
-        .environment(AppState())
+    let dependencies = AppDependencies.preview()
+    return CameraView(cameraVM: dependencies.makeCameraViewModel())
+        .environment(dependencies.makeAppState())
+        .environment(dependencies)
 }

@@ -9,6 +9,7 @@ import CoreLocation
 import Foundation
 
 @Observable
+@MainActor
 class LocationManager: NSObject, CLLocationManagerDelegate {
     @ObservationIgnored private let locationManager = CLLocationManager()
 
@@ -55,7 +56,14 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         isLocationAvailable = false
     }
 
-    func locationManagerDidChangeAuthorization(_: CLLocationManager) {
-        requestLocationPermission()
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:
+            startUpdatingLocation()
+        case .denied, .restricted:
+            isLocationAvailable = false
+        default:
+            break
+        }
     }
 }

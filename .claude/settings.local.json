@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n \"var\\\\|let\\\\|func\" StormChaserApp/**/*.swift)",
+      "Bash(grep -n \"_:\" StormChaserApp/**/*.swift)",
+      "Bash(grep -n \"return\\\\|fatalError\\\\|preconditionFailure\" /Users/a-elnajjar/Documents/GitHub/StormChaserApp/StormChaserApp/**/*.swift)",
+      "WebFetch(domain:www.createwithswift.com)",
+      "Bash(git checkout:*)",
+      "Bash(xcodebuild -scheme StormChaserApp -destination 'platform=iOS Simulator,name=iPhone 16' build 2>&1 | tail -20)",
+      "Bash(xcodebuild -scheme StormChaserApp -destination 'platform=iOS Simulator,name=iPhone 17' build 2>&1 | grep -E \"error:|warning:|BUILD\")",
+      "Bash(xcodebuild -scheme StormChaserApp -destination 'platform=iOS Simulator,name=iPhone 17' build 2>&1 | grep -E \"error:|BUILD\")"
+    ]
+  }
+}

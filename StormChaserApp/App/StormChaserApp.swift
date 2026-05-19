@@ -10,23 +10,36 @@ import SwiftUI
 
 @main
 struct StormChaserApp: App {
-    @State private var appState = AppState()
-    var sharedModelContainer: ModelContainer = {
+    @State private var appState: AppState
+    @State private var dependencies: AppDependencies
+
+    init() {
+        let dependencies = AppDependencies.live()
+        _dependencies = State(initialValue: dependencies)
+        _appState = State(initialValue: dependencies.makeAppState())
+    }
+
+    private let modelContainerResult: Result<ModelContainer, Error> = {
         let schema = Schema([Storm.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try .success(ModelContainer(for: schema, configurations: [modelConfiguration]))
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            return .failure(error)
         }
     }()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(appState)
+            switch modelContainerResult {
+            case let .success(container):
+                ContentView()
+                    .environment(appState)
+                    .environment(dependencies)
+                    .modelContainer(container)
+            case let .failure(error):
+                ErrorView(message: "Failed to load storage: \(error.localizedDescription)")
+            }
         }
-        .modelContainer(sharedModelContainer)
     }
 }

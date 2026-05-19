@@ -2,43 +2,46 @@
 import Testing
 
 struct WeatherRepositoryIntegrationTests {
-    @Test("API returns weather data with valid values")
+    @Test("Current weather endpoint returns data with valid values")
     func getWeather_returnsData() async throws {
-        let repository = await WeatherRepository(networkClient: NetworkClient())
+        let repository = WeatherRepository(networkClient: NetworkClient())
 
         let weather = try await repository.getWeather(
             latitude: AppConfig.Locations.newYorkCityLatitude,
             longitude: AppConfig.Locations.newYorkCityLongitude
         )
 
-        #expect(!weather.description.isEmpty)
+        #expect(!weather.source.isEmpty)
+        #expect(!weather.location.isEmpty)
         #expect(!weather.windSpeed.isEmpty)
         #expect(!weather.windDirection.isEmpty)
         #expect(weather.humidity >= 0 && weather.humidity <= 100)
-        #expect(weather.temperature >= -60 && weather.temperature <= 150)
     }
 
-    @Test("API returns forecast with up to 7 periods")
-    func getWeather_returnsForecast() async throws {
-        let repository = await WeatherRepository(networkClient: NetworkClient())
+    @Test("Forecast endpoint returns periods")
+    func getForecast_returnsPeriods() async throws {
+        let repository = WeatherRepository(networkClient: NetworkClient())
 
-        let weather = try await repository.getWeather(
+        let forecasts = try await repository.getForecast(
             latitude: AppConfig.Locations.newYorkCityLatitude,
             longitude: AppConfig.Locations.newYorkCityLongitude
         )
 
-        #expect(!weather.forecast.isEmpty)
-        #expect(weather.forecast.count <= 7)
+        #expect(!forecasts.isEmpty)
 
-        for period in await weather.forecast {
+        let firstForecast = try #require(forecasts.first)
+        #expect(!firstForecast.source.isEmpty)
+        #expect(!firstForecast.location.isEmpty)
+        #expect(!firstForecast.periods.isEmpty)
+
+        for period in firstForecast.periods {
             #expect(!period.name.isEmpty)
-            #expect(!period.description.isEmpty)
         }
     }
 
     @Test("Coordinates outside the US throw an error")
     func getWeather_invalidCoordinates_throwsError() async {
-        let repository = await WeatherRepository(networkClient: NetworkClient())
+        let repository = WeatherRepository(networkClient: NetworkClient())
 
         await #expect(throws: (any Error).self) {
             try await repository.getWeather(latitude: 0, longitude: 0)

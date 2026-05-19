@@ -23,57 +23,95 @@ final class CameraViewModel {
     var duration = ""
     var weatherData: Weather?
     var currentLocation: (lat: Double, lon: Double)?
+    var countryCode: String = ""
     var showSuccessAlert = false
     var alertMessage = ""
 
     private let weatherRepository: WeatherRepositoryProtocol
 
-    init(weatherRepository: WeatherRepositoryProtocol = WeatherRepository(networkClient: NetworkClient())) {
+    init(weatherRepository: WeatherRepositoryProtocol) {
         self.weatherRepository = weatherRepository
     }
 
-    func prepareMetadataForm(userLocation: CLLocationCoordinate2D?) async {
+    func prepareMetadataForm(userLocation: CLLocationCoordinate2D?, debugCity: AppConfig.DebugCity?) async {
         isPreparingMetadata = true
         defer { isPreparingMetadata = false }
 
-		if userLocation != nil {
-            // weather.gov only covers the US, so NYC is used as the fixed location
-            currentLocation = (AppConfig.Locations.newYorkCityLatitude, AppConfig.Locations.newYorkCityLongitude)
+        if let city = debugCity {
+            currentLocation = (city.latitude, city.longitude)
+        } else if let userLocation = userLocation {
+            currentLocation = (userLocation.latitude, userLocation.longitude)
+        } else {
+            currentLocation = (
+                AppConfig.Locations.newYorkCityLatitude,
+                AppConfig.Locations.newYorkCityLongitude
+            )
         }
 
         if let lat = currentLocation?.lat, let lon = currentLocation?.lon {
-            weatherData = try? await weatherRepository.getWeather(latitude: lat, longitude: lon)
+            // Resolve country code from coordinates
+            countryCode = await resolveCountryCode(latitude: lat, longitude: lon)
+
+            do {
+                weatherData = try await weatherRepository.getWeather(
+                    country: countryCode,
+                    latitude: lat,
+                    longitude: lon
+                )
+            } catch {
+                weatherData = nil
+                alertMessage = "Could not load weather data: \(error.localizedDescription)"
+                showSuccessAlert = true
+            }
         }
 
         showMetadataForm = true
     }
 
-    func saveStorm(photo: UIImage, modelContext: ModelContext) {
-        let repository = StormRepository(modelContext: modelContext)
-        let storm = Storm(
+    private func resolveCountryCode(latitude: Double, longitude: Double) async -> String {
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+        let placemarks = try? await CLGeocoder().reverseGeocodeLocation(location)
+        return placemarks?.first?.isoCountryCode ?? "US"
+    }
+
+    func saveStorm(photo: UIImage, repository: StormRepositoryProtocol) async {
+        let trimmedDuration = duration.trimmingCharacters(in: .whitespacesAndNewlines)
+        let parsedDuration = trimmedDuration.isEmpty ? nil : Int(trimmedDuration)
+
+        if !trimmedDuration.isEmpty, parsedDuration == nil {
+            alertMessage = "Duration must be a whole number of minutes."
+            showSuccessAlert = true
+            return
+        }
+
+        let snapshot = StormSnapshot(
             photoData: photo.jpegData(compressionQuality: 0.8),
             temperature: weatherData?.temperature,
             humidity: weatherData?.humidity,
             windSpeed: weatherData?.windSpeed,
             weatherDescription: weatherData?.description,
-            latitude: AppConfig.Locations.newYorkCityLatitude,
-            longitude: AppConfig.Locations.newYorkCityLongitude,
+            latitude: currentLocation?.lat ?? AppConfig.Locations.newYorkCityLatitude,
+            longitude: currentLocation?.lon ?? AppConfig.Locations.newYorkCityLongitude,
             timestamp: Date(),
             notes: notes,
             stormType: stormType,
-            intensity: intensity
+            intensity: intensity,
+            duration: parsedDuration
         )
 
-        Task {
-            do {
-                try await repository.addStorm(storm)
-                alertMessage = "Storm saved successfully!\n\nType: \(stormType)\nLocation: \(String(format: "%.2f°, %.2f°", currentLocation?.lat ?? 0, currentLocation?.lon ?? 0))"
-                showSuccessAlert = true
-                resetForm()
-            } catch {
-                alertMessage = "Failed to save storm: \(error.localizedDescription)"
-                showSuccessAlert = true
-            }
+        do {
+            try await repository.addStorm(snapshot)
+            alertMessage = """
+            Storm saved successfully!
+
+            Type: \(stormType)
+            Location: \(String(format: "%.2f°, %.2f°", currentLocation?.lat ?? 0, currentLocation?.lon ?? 0))
+            """
+            showSuccessAlert = true
+            resetForm()
+        } catch {
+            alertMessage = "Failed to save storm: \(error.localizedDescription)"
+            showSuccessAlert = true
         }
     }
 
@@ -86,5 +124,6 @@ final class CameraViewModel {
         showMetadataForm = false
         weatherData = nil
         currentLocation = nil
+        countryCode = ""
     }
 }

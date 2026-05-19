@@ -5,11 +5,13 @@
 //  Created by Abdalla Elnajjar on 2026-04-01.
 //
 
+import SwiftData
 import SwiftUI
 
 struct StormHistoryView: View {
-    @State private var stormVM: StormViewModel?
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppDependencies.self) private var dependencies
+    @State private var stormVM: StormViewModel?
 
     var body: some View {
         NavigationStack {
@@ -33,12 +35,12 @@ struct StormHistoryView: View {
                     VStack(spacing: 20) {
                         Image(systemName: "cloud.fill")
                             .font(.system(size: 50))
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                         Text("No Storms Documented")
                             .font(.headline)
                         Text("Document storms to see them here")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                     }
                     .frame(maxHeight: .infinity)
                 }
@@ -46,20 +48,17 @@ struct StormHistoryView: View {
             .navigationTitle("Storm History")
             .navigationBarTitleDisplayMode(.inline)
             .task {
-                if stormVM == nil {
-                    let repository = StormRepository(modelContext: modelContext)
-                    stormVM = StormViewModel(repository: repository)
-                }
-                await stormVM?.fetchStorms()
+                let vm = dependencies.makeStormViewModel(container: modelContext.container)
+                stormVM = vm
+                await vm.fetchStorms()
             }
-            .alert("Error", isPresented: .constant(stormVM?.errorMessage != nil)) {
-                Button("OK") {
-                    stormVM?.errorMessage = nil
-                }
+            .alert("Error", isPresented: Binding(
+                get: { stormVM?.errorMessage != nil },
+                set: { if !$0 { stormVM?.errorMessage = nil } }
+            )) {
+                Button("OK") { stormVM?.errorMessage = nil }
             } message: {
-                if let error = stormVM?.errorMessage {
-                    Text(error)
-                }
+                Text(stormVM?.errorMessage ?? "")
             }
         }
     }
@@ -67,4 +66,6 @@ struct StormHistoryView: View {
 
 #Preview {
     StormHistoryView()
+        .environment(AppDependencies.preview())
+        .modelContainer(for: Storm.self, inMemory: true)
 }

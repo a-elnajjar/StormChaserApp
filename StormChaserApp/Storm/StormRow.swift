@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StormRow: View {
-    let storm: Storm
+    let storm: StormSnapshot
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -18,7 +18,7 @@ struct StormRow: View {
                         .font(.headline)
                     Text(storm.timestamp.formatted(date: .abbreviated, time: .shortened))
                         .font(.caption)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                 }
                 Spacer()
                 if let photoData = storm.photoData,
@@ -36,7 +36,7 @@ struct StormRow: View {
                 HStack {
                     Text("Location:")
                         .font(.caption)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                     Text(String(format: "%.3f, %.3f", storm.latitude, storm.longitude))
                         .font(.caption)
                         .fontWeight(.semibold)
@@ -59,7 +59,7 @@ struct StormRow: View {
                                 .font(.caption)
                         }
                     }
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                 }
             }
         }

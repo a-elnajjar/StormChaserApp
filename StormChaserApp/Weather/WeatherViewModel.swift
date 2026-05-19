@@ -13,7 +13,7 @@ import Observation
 enum WeatherState {
     case idle
     case loading
-    case success(Weather)
+    case success(Weather, WeatherForecast)
     case error(String)
 }
 
@@ -30,12 +30,13 @@ class WeatherViewModel {
         weatherRepo = repository
     }
 
-    func fetchWeather(latitude: Double, longitude: Double) async {
+    func fetchWeather(country: String, latitude: Double, longitude: Double) async {
         state = .loading
 
         do {
-            let weather = try await weatherRepo.getWeather(latitude: latitude, longitude: longitude)
-            state = .success(weather)
+            async let current = weatherRepo.getWeather(country: country, latitude: latitude, longitude: longitude)
+            async let forecast = weatherRepo.getForecast(country: country, latitude: latitude, longitude: longitude)
+            state = try .success(await current, await forecast)
         } catch let error as NetworkError {
             self.state = .error(error.errorDescription ?? "Unknown error")
         } catch {

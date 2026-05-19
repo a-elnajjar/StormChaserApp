@@ -29,9 +29,33 @@
 		8E3DF29F2F7D838F000A3642 /* StormChaserAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StormChaserAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		8E37CE0E2F8B8D2F0036B903 /* Exceptions for "StormChaserApp" folder in "StormChaserApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 8E3DF2872F7D838C000A3642 /* StormChaserApp */;
+		};
+		8E61C89E2FAA6EE200521910 /* Exceptions for "StormChaserApp" folder in "StormChaserAppTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				PostsView/Post.swift,
+				PostsView/PostRepository.swift,
+				PostsView/PostView.swift,
+				PostsView/PostViewModel.swift,
+			);
+			target = 8E3DF2942F7D838F000A3642 /* StormChaserAppTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		8E3DF28A2F7D838C000A3642 /* StormChaserApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				8E37CE0E2F8B8D2F0036B903 /* Exceptions for "StormChaserApp" folder in "StormChaserApp" target */,
+				8E61C89E2FAA6EE200521910 /* Exceptions for "StormChaserApp" folder in "StormChaserAppTests" target */,
+			);
 			path = StormChaserApp;
 			sourceTree = "<group>";
 		};
@@ -391,6 +415,7 @@
 				DEVELOPMENT_TEAM = J7YCHK8ZJ4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StormChaserApp/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Used to capture storm photos.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need your location to fetch accurate weather data for your area.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to fetch accurate weather data for your area.";
@@ -430,6 +455,7 @@
 				DEVELOPMENT_TEAM = J7YCHK8ZJ4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StormChaserApp/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Used to capture storm photos.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need your location to fetch accurate weather data for your area.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to fetch accurate weather data for your area.";

@@ -37,13 +37,23 @@ enum NetworkError: LocalizedError {
 actor NetworkClient {
     private let session: URLSession
 
-    init(session: URLSession = .shared) {
+    init() {
+        session = URLCacheProvider.createConfiguredSession()
+    }
+
+    init(session: URLSession) {
         self.session = session
     }
 
-    func get<T: Decodable>(url: URL) async throws -> T {
+    func get<T: Decodable & Sendable>(url: URL) async throws -> T {
+        var request = URLRequest(url: url)
+        request.cachePolicy = .useProtocolCachePolicy
+        return try await get(request: request)
+    }
+
+    func get<T: Decodable & Sendable>(request: URLRequest) async throws -> T {
         do {
-            let (data, response) = try await session.data(from: url)
+            let (data, response) = try await session.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse,
                   (200 ... 299).contains(httpResponse.statusCode)
@@ -51,12 +61,39 @@ actor NetworkClient {
                 throw NetworkError.invalidResponse
             }
 
-            let decoded = try JSONDecoder().decode(T.self, from: data)
-            return decoded
-        } catch is DecodingError {
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .custom(Self.DateDecodingStrategy)
+            return try decoder.decode(T.self, from: data)
+        } catch let error as NetworkError {
+            throw error
+        } catch let error as DecodingError {
+            print("Decoding error: \(error)")
             throw NetworkError.decodingError
         } catch {
             throw NetworkError.networkError
         }
+    }
+
+    private static func DateDecodingStrategy(from decoder: Decoder) throws -> Date {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+
+        let formatOptions: [ISO8601DateFormatter.Options] = [
+            [.withInternetDateTime, .withFractionalSeconds],
+            [.withInternetDateTime],
+        ]
+
+        for options in formatOptions {
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = options
+            if let date = formatter.date(from: rawValue) {
+                return date
+            }
+        }
+
+        throw DecodingError.dataCorruptedError(
+            in: container,
+            debugDescription: "Unsupported ISO8601 date format: \(rawValue)"
+        )
     }
 }
