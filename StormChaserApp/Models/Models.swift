@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - API Response Model (maps directly from .NET API)
 
-struct WeatherObservation: Sendable {
+struct WeatherObservation:Codable, Sendable {
     let source: String
     let location: String
     let temperature: Double?
@@ -20,9 +20,9 @@ struct WeatherObservation: Sendable {
     let observedAt: Date
 }
 
-nonisolated extension WeatherObservation: Codable {}
 
-struct ForecastPeriod: Sendable {
+
+struct ForecastPeriod:Codable, Sendable {
     let name: String
     let temperature: Double?
     let windSpeed: String?
@@ -30,11 +30,11 @@ struct ForecastPeriod: Sendable {
     let description: String?
 }
 
-nonisolated extension ForecastPeriod: Codable {}
+
 
 // MARK: - Domain Model
 
-struct Weather: Sendable {
+struct Weather:Codable, Sendable {
     let source: String
     let location: String
     let temperature: Double
@@ -77,12 +77,12 @@ struct Weather: Sendable {
     }
 }
 
-nonisolated extension Weather: Codable {}
 
-struct WeatherForecast: Sendable {
+
+struct WeatherForecast:Codable, Sendable {
     let source: String
     let location: String
     let periods: [ForecastPeriod]
 }
 
-nonisolated extension WeatherForecast: Codable {}
+

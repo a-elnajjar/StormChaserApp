@@ -16,7 +16,7 @@ protocol WeatherRepositoryProtocol: Sendable {
 
 // MARK: - Weather Repository Implementation
 
-actor WeatherRepository: WeatherRepositoryProtocol {
+final class WeatherRepository: WeatherRepositoryProtocol {
     private let baseURL: String = AppConfig.WeatherAPI.baseURL
     private let networkClient: NetworkClient
 
@@ -44,7 +44,7 @@ actor WeatherRepository: WeatherRepositoryProtocol {
         return try await fetchWithOfflineFallback(request: request)
     }
 
-    private func fetchWithOfflineFallback<T: Decodable & Sendable>(request: URLRequest) async throws -> T {
+    private func fetchWithOfflineFallback<T: Decodable>(request: URLRequest) async throws -> T {
         do {
             return try await networkClient.get(request: request)
         } catch {
